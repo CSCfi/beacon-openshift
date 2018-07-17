@@ -117,7 +117,7 @@ def main():
     #app.config['SESSION_COOKIE_SECURE'] = True
     host = os.environ['APP_HOST']
     port = os.environ['APP_PORT']
-    debug = os.environ['APP_PORT']
+    debug = os.environ['APP_DEBUG']
     app.run(host=host, port=port, debug=debug)
 
 
