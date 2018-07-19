@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from flask import Flask, abort, request, make_response, session
 from uuid import uuid4
 import os
@@ -6,11 +7,12 @@ import logging
 import requests
 import requests.auth
 import urllib.parse
-CLIENT_ID = os.environ['CLIENT_ID']
-CLIENT_SECRET = os.environ['CLIENT_SECRET']
-REDIRECT_URI = os.environ['REDIRECT_URI']
-COOKIE_AGE = os.environ['COOKIE_AGE']
-COOKIE_SECURE = os.environ['COOKIE_SECURE']
+
+# TEST WEBHOOK TRIGGER
+
+CLIENT_ID = os.environ.get('CLIENT_ID', None)
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
+REDIRECT_URI = os.environ.get('REDIRECT_URI', None)
 
 # Logging
 FORMAT = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(funcName)s: %(message)s'
@@ -18,14 +20,17 @@ logging.basicConfig(format=FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
+
 def user_agent():
-    return "what should I return here?"
+    return "ELIXIR Beacon Login"
+
 
 def base_headers():
     return {"User-Agent": user_agent()}
 
 
 app = Flask(__name__)
+
 
 @app.route('/app')
 def homepage():
@@ -55,6 +60,7 @@ def save_created_state(state):
 def is_valid_state(state):
     return True
 
+
 @app.route('/')
 def elixir_callback():
     error = request.args.get('error', '')
@@ -69,25 +75,10 @@ def elixir_callback():
     # Note: In most cases, you'll want to store the access token, in, say,
     # a session for use in other parts of your web app.
     userdetails = get_userdetails(access_token)
-    #cookie = set_cookie(access_token)
     response = app.make_response(userdetails)
-    response.set_cookie('access_token', access_token, max_age=COOKIE_AGE, secure=COOKIE_SECURE)  # domain=ip
+    response.set_cookie('access_token', access_token, max_age=os.environ.get('COOKIE_AGE', 3600), secure=os.environ.get('COOKIE_SECURE', True))  # domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi')
     return response
 
-
-@app.route('/set_cookie')
-def set_cookie():
-    access_token = 'test'
-    LOG.info('SET COOKIE: ' + access_token)
-    res = make_response('Set cookie')
-    #res.set_cookie('access_token', access_token, max_age=30, secure=True)  # HTTPS only
-    res.set_cookie('access_token', access_token, max_age=COOKIE_AGE, secure=COOKIE_SECURE)
-    return res
-
-@app.route('/get_cookie')
-def get_cookie():
-    cookie = request.cookies.get('access_token')
-    return cookie
 
 def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
@@ -113,12 +104,11 @@ def get_userdetails(access_token):
 
 
 def main():
-    app.secret_key = os.environ['COOKIE_SECRET']
-    #app.config['SESSION_COOKIE_SECURE'] = True
-    host = os.environ['APP_HOST']
-    port = os.environ['APP_PORT']
-    debug = os.environ['APP_DEBUG']
-    app.run(host=host, port=port, debug=debug)
+    app.secret_key = os.environ.get('COOKIE_SECRET', None)
+    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
+    app.run(host=os.environ.get('APP_HOST', 'localhost'),
+            port=os.environ.get('APP_PORT', 8080),
+            debug=os.environ.get('APP_DEBUG', True))
 
 
 if __name__ == '__main__':
