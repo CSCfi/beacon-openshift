@@ -9,6 +9,7 @@ import requests.auth
 import urllib.parse
 
 # TEST WEBHOOK TRIGGER
+# ANOTHER WEBHOOK PUSH TEST
 
 CLIENT_ID = os.environ.get('CLIENT_ID', None)
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
@@ -105,7 +106,7 @@ def get_userdetails(access_token):
 
 def main():
     app.secret_key = os.environ.get('COOKIE_SECRET', None)
-    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
+    #app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
     app.run(host=os.environ.get('APP_HOST', 'localhost'),
             port=os.environ.get('APP_PORT', 8080),
             debug=os.environ.get('APP_DEBUG', True))
