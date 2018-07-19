@@ -103,8 +103,7 @@ def get_userdetails(access_token):
 
 def main():
     app.secret_key = os.environ.get('COOKIE_SECRET', None)
-    if os.environ.get('SESSION_COOKIE_SECURE', False):
-        app.config['SESSION_COOKIE_SECURE'] = True
+    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
     app.run(host=os.environ.get('APP_HOST', 'localhost'),
             port=os.environ.get('APP_PORT', 8080),
             debug=os.environ.get('APP_DEBUG', True))
