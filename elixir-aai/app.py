@@ -78,21 +78,6 @@ def elixir_callback():
     return response
 
 
-@app.route('/set_cookie')
-def set_cookie():
-    access_token = 'test'
-    LOG.info('SET COOKIE: ' + access_token)
-    res = make_response('Set cookie')
-    res.set_cookie('access_token', access_token, max_age=COOKIE_AGE, secure=COOKIE_SECURE)
-    return res
-
-
-@app.route('/get_cookie')
-def get_cookie():
-    cookie = request.cookies.get('access_token')
-    return cookie
-
-
 def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
     post_data = {"grant_type": "authorization_code",
