@@ -8,7 +8,6 @@ import requests
 import requests.auth
 import urllib.parse
 
-# TEST WEBHOOK TRIGGER
 
 CLIENT_ID = os.environ.get('CLIENT_ID', None)
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
@@ -76,7 +75,11 @@ def elixir_callback():
     # a session for use in other parts of your web app.
     userdetails = get_userdetails(access_token)
     response = app.make_response(userdetails)
-    response.set_cookie('access_token', access_token, max_age=os.environ.get('COOKIE_AGE', 3600), secure=os.environ.get('COOKIE_SECURE', True))  # domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi')
+    response.set_cookie('access_token',
+                        access_token,
+                        max_age=os.environ.get('COOKIE_AGE', 3600),
+                        secure=os.environ.get('COOKIE_SECURE', True),
+                        domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi'))
     return response
 
 
@@ -105,7 +108,7 @@ def get_userdetails(access_token):
 
 def main():
     app.secret_key = os.environ.get('COOKIE_SECRET', None)
-    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
+    #app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
     app.run(host=os.environ.get('APP_HOST', 'localhost'),
             port=os.environ.get('APP_PORT', 8080),
             debug=os.environ.get('APP_DEBUG', True))
