@@ -1,0 +1,88 @@
+<div ng-if="!cookieLoggedIn" class="col-md-2 ml-md-auto"><a href="http://beacon-auth-beacon.rahtiapp.fi/app"><img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"></a></img></div>
+<div ng-if="cookieLoggedIn" class="col-md-3 ml-md-auto"><span class="user-logged-in"><i class="fas fa-user" title="Bona Fide"></i> Riis Örtser</span> <a href="" title="Destroy cookies">Log Out <i class="fas fa-sign-out-alt"></i></a></div>
+<h1 style="display:none;">ELIXIR Beacon Network</h1></br>
+<h2 style="text-align:center;"><a href="http://beacon-ui-beacon.rahtiapp.fi/"><img id="logo" src="assets/beacon-small-3.png"></a></img></h2>
+
+<!--<div class="row row-backbordered"> BREAKS THE DOCUMENT-->
+<div class="col-sm-12">
+  <div class="card search-card">
+    <div class="card-body">
+      <form name="searchForm" ng-submit="submit()" class="form-inline">
+        <div class="mx-auto">
+          <select class="form-control" ng-model="search.type">
+            <option value="variant">Variant</option>
+            <option value="disease" selected>Disease</option>
+            <option value="gene">Gene</option>
+          </select>
+          <select class="form-control" ng-model="assembly.selected" ng-if="search.type == 'gene' || search.type == 'variant'">
+            <option value="GRCh38" selected>GRCh38</option>
+            <option value="GRCh37">GRCh37</option>
+          </select>
+          <input class="form-control input-lg search-input" type="text" ng-if="search.type == 'disease'" placeholder="Name of disease.." ng-model="search.query" required />
+          <input class="form-control input-lg search-input" type="text" ng-if="search.type == 'gene'" placeholder="Name of gene.." ng-model="search.query" required />
+          <input class="form-control input-lg search-input" type="text" ng-if="search.type == 'variant'" placeholder="Chromosomal variant.." title="Chr : ChrPos Ref > Alt" ng-model="search.query" required />
+          <!--<input ng-click="searchExample(search.type)" type="submit" name="example" value="Example" class="btn">-->
+          <button type="submit" name="submit" id="submit" value="Submit" class="btn btn-primary"><i class="fas fa-search"></i></button>
+          <!--<input ng-if="search.type == 'gene'" type="submit" name="beaconSearch" value="Find Datasets" class="btn" style="background-color:#F57C20;color:#FFF;">-->
+        </div>
+      </form>
+      <div style="text-align:center"><a href="" ng-click="searchExample(search.type)">Show example search term</a></div>
+    </div>
+  </div>
+  <!--<div ng-if="search.type == 'disease' && url.includes('disease')" class="row result-row">-->
+  <div ng-if="search.type == 'disease' && url.includes('disease') && message.data.http !== 404 && message.data.http !== 400" class="row result-row">
+    <div ng-repeat="datum in message.data">
+      <div class="result-box"><div class="result-header" title="Disease Genotype">{{ datum.genotype_name || "Genotype n/a" }}</div>
+                                    <div class="result-contents"><b>Phenotype:</b> {{ datum.phenotype_name }}<br>
+                                    <b>Gene:</b> {{ datum.gene }}<br>
+                                    <b>More Info:</b> <span ng-if="datum.genotype_id.includes('ORPHA')">{{ datum.genotype_id }}</span>
+                                                      <a ng-if="datum.genotype_id.includes('OMIM')" target="_blank" href="https://omim.org/entry/{{ datum.genotype_id.replace('OMIM:', '') }}">{{ datum.genotype_id }} <i class="fas fa-external-link-alt"></i></a><br><hr>
+                                    <div style="text-align:center"><input type="submit" ng-click="goToGene(datum.gene)" value="Browse Variants" class="btn" style="background-color:#F57C20;color:#FFF" /></div></div>
+                                  </div>
+    </div>
+  </div>
+  <!--<div ng-if="search.type == 'gene' && url.includes('gene')" class="result-row">-->
+  <div ng-if="search.type == 'gene' && url.includes('gene') && message.data.http !== 404 && message.data.http !== 400" class="result-row">
+      <div ng-repeat="datum in message.data">
+        <div class="result-box"><div class="result-header">{{datum.chr}} : {{datum.chrpos}} {{datum.ref}} > {{datum.alt}}</div>
+                                      <div class="result-contents"><b>Assembly:</b> {{ datum.assembly }}<br>
+                                      <b>Accession:</b> {{ datum.accession }}<br>
+                                      <b>Assembly Accession Version:</b> {{ datum.accession_ver }}<br></div>
+                                      <!--<input type="checkbox" /> Select this mutation for dataset mass search<br>-->
+                                      <a target="_bank" href="https://beacon-network.org/#/search?pos={{datum.chrpos}}&chrom={{datum.chr}}&allele={{datum.alt}}&ref={{datum.ref}}&rs={{datum.assembly}}"><button class="btn" style="background-color:#F57C20;color:#FFF" value="Find Datasets">Beacon Network</button></a>
+                                      <button ng-click="findDatasets(datum.chr, datum.chrpos, datum.ref, datum.alt, datum.assembly)" class="btn" style="background-color:#F57C20;color:#FFF" value="Find Datasets">Find Datasets</button>
+                                    </div>
+      </div>
+  </div>
+  <div ng-if="search.type == 'variant'" class="result-row">
+    <div ng-if="message == 'q'" style="text-align:center;margin-top:50px;">{{err}}<br><i class="fas fa-circle-notch icon_animation"></i></div>
+    <div ng-repeat="datum in message.data">
+      <div ng-if="datum.response">
+        <div class="beacon-container">
+          <div class="beacon-header">{{datum.beacon}}</div>
+          <div class="beacon-content">Metadata about dataset and/or beacon.</div>
+          <div class="beacon-content"><button class="btn" style="background-color:#F57C20;color:#FFF">Contact Beacon</button></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center"><div ng-if="message.data.http">{{message.data.msg}}</div></div>
+</div>
+
+
+<!--</div>-->
+<!--
+<hr>
+
+Debug view
+<pre style="background-color:#F7F7F7;font-size:12px;margin:50px;padding:5px;">
+Input field:
+<tt>{{ search.type }} -> {{ search.query }}</tt>
+
+Query:
+<tt>{{ url }}</tt>
+
+Response:
+<tt>{{ message.data }}</tt>
+</pre>
+-->

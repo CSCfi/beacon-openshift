@@ -1,0 +1,26 @@
+.search-card {
+	border-top: 5px solid #f09905;
+	margin-left: 40px;
+	margin-right: 40px;
+	box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+
+.row-backbordered:before{
+	content:'';
+	position:absolute;
+	display:block;
+	top:45%;
+	left:-1000px;
+	right:-1000px;
+	height:1px;
+	background-color:#dcdfe4
+}
+
+.row-backbordered {
+	position: relative;
+}
+
+.search-input {
+	width: 500px !important;
+}
