@@ -78,12 +78,12 @@ def elixir_callback():
     #response = app.make_response(userdetails)
     LOG.info('callback 2')
     try:
-        response = app.make_response(redirect('https://beacon-ui-beacon.rahtiapp.fi/'))
+        response = app.make_response(redirect(os.environ.get('COOKIE_DOMAIN', None))
         response.set_cookie('access_token',
                             access_token,
                             max_age=os.environ.get('COOKIE_AGE', 3600),
                             secure=os.environ.get('COOKIE_SECURE', True),
-                            domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi'))
+                            domain=os.environ.get('COOKIE_DOMAIN', None))
         LOG.info('cookie is set')
     except Exception as e:
         LOG.error(str(e))
