@@ -1,2 +1,1 @@
-RUN chgrp -R 0 /etc/hosts && \
-    chmod -R g=u /etc/hosts
+RUN echo "0.0.0.0 localhost dev.localhost" >> /etc/hosts
