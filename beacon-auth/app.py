@@ -73,8 +73,9 @@ def elixir_callback():
     access_token = get_token(code)
     # Note: In most cases, you'll want to store the access token, in, say,
     # a session for use in other parts of your web app.
-    userdetails = get_userdetails(access_token)
-    response = app.make_response(userdetails)
+    #userdetails = get_userdetails(access_token)  # DISABLED FOR NOW
+    #response = app.make_response(userdetails)
+    response = app.make_response('Set access_token to cookies')
     response.set_cookie('access_token',
                         access_token,
                         max_age=os.environ.get('COOKIE_AGE', 3600),
@@ -96,7 +97,7 @@ def get_token(code):
     token_json = response.json()
     return token_json['access_token']
 
-
+''' DISABLED FOR TESTING
 def get_userdetails(access_token):
     headers = base_headers()
     headers.update({"Authorization": "Bearer " + access_token})
@@ -104,7 +105,7 @@ def get_userdetails(access_token):
                             headers=headers)
     userdetails = response.json()
     return userdetails['sub']
-
+'''
 
 def main():
     app.secret_key = os.environ.get('COOKIE_SECRET', None)
