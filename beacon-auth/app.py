@@ -75,12 +75,16 @@ def elixir_callback():
     # a session for use in other parts of your web app.
     #userdetails = get_userdetails(access_token)  # DISABLED FOR NOW
     #response = app.make_response(userdetails)
-    response = app.make_response('Set access_token to cookies')
-    response.set_cookie('access_token',
-                        access_token,
-                        max_age=os.environ.get('COOKIE_AGE', 3600),
-                        secure=os.environ.get('COOKIE_SECURE', True),
-                        domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi'))
+    try:
+        response = app.make_response('Set access_token to cookies')
+        response.set_cookie('access_token',
+                            access_token,
+                            max_age=os.environ.get('COOKIE_AGE', 3600),
+                            secure=os.environ.get('COOKIE_SECURE', True),
+                            domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi'))
+        LOG.info('cookie is set')
+    except Exception as e:
+        LOG.error(str(e))
     return response
 
 
