@@ -16,7 +16,7 @@ angular.module('myApp.view2', ['ngRoute'])
   $scope.url = '';
   $scope.cookieLoggedIn = false;
 
-  $scope.baseUrl = 'http://beacon-search-beacon.rahtiapp.fi/api?';
+  $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi/api?';
   $scope.urlDisease = 'disease=';
   $scope.urlGene = 'gene=';
   $scope.urlAssembly = '&assembly=';
@@ -34,7 +34,7 @@ angular.module('myApp.view2', ['ngRoute'])
     } else if ($scope.search.type == 'variant') {
       console.log('search type: ' + $scope.search.type);
       var qs = $scope.search.query.split(" ");
-      $scope.url = 'http://beacon-aggregator-beacon.rahtiapp.fi/q?ref='+$scope.assembly.selected+'&chrom='+qs[0]+'&pos='+qs[2]+'&allele='+qs[5];
+      $scope.url = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?ref='+$scope.assembly.selected+'&chrom='+qs[0]+'&pos='+qs[2]+'&allele='+qs[5];
       console.log($scope.url);
       $scope.message = 'q';
     } else {
@@ -99,7 +99,7 @@ angular.module('myApp.view2', ['ngRoute'])
     
     $http({
       method: 'GET',
-      url: 'http://beacon-aggregator-beacon.rahtiapp.fi/q?ref='+assembly+'&chrom='+chr+'&pos='+pos+'&allele='+alt
+      url: 'https://beacon-aggregator-beacon.rahtiapp.fi/q?ref='+assembly+'&chrom='+chr+'&pos='+pos+'&allele='+alt
     }).then(function successCallback(response) {
         console.log(response);
         $scope.message = response;
