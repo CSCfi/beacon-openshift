@@ -11,7 +11,7 @@ import urllib.parse
 
 CLIENT_ID = os.environ.get('CLIENT_ID', None)
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
-REDIRECT_URI = os.environ.get('REDIRECT_URI', None)
+CALLBACK_URL = os.environ.get('CALLBACK_URL', None)
 
 # Logging
 FORMAT = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(funcName)s: %(message)s'
@@ -45,7 +45,7 @@ def make_authorization_url():
     params = {"client_id": CLIENT_ID,
               "response_type": "code",
               "state": state,
-              "redirect_uri": REDIRECT_URI,
+              "redirect_uri": CALLBACK_URL,
               "duration": "temporary",
               "scope": 'openid bona_fide_status'}
     url = "https://login.elixir-czech.org/oidc/authorize?" + urllib.parse.urlencode(params)
@@ -78,7 +78,7 @@ def elixir_callback():
     #response = app.make_response(userdetails)
     LOG.info('callback 2')
     try:
-        response = app.make_response(redirect(os.environ.get('COOKIE_DOMAIN', None)))
+        response = app.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
         response.set_cookie('access_token',
                             access_token,
                             max_age=os.environ.get('COOKIE_AGE', 3600),
@@ -94,7 +94,7 @@ def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
     post_data = {"grant_type": "authorization_code",
                  "code": code,
-                 "redirect_uri": REDIRECT_URI}
+                 "redirect_uri": CALLBACK_URL}
     headers = base_headers()
     response = requests.post("https://login.elixir-czech.org/oidc/token",
                              auth=client_auth,
