@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, abort, request, make_response, session
+from flask import Flask, abort, request, make_response, session, redirect
 from uuid import uuid4
 import os
 import logging
@@ -78,7 +78,7 @@ def elixir_callback():
     #response = app.make_response(userdetails)
     LOG.info('callback 2')
     try:
-        response = app.make_response('Set access_token to cookies')
+        response = app.make_response(redirect('https://beacon-ui-beacon.rahtiapp.fi/'))
         response.set_cookie('access_token',
                             access_token,
                             max_age=os.environ.get('COOKIE_AGE', 3600),
