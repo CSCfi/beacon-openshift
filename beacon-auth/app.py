@@ -62,7 +62,6 @@ def is_valid_state(state):
 
 @app.route('/')
 def elixir_callback():
-    LOG.info('callback 1')
     error = request.args.get('error', '')
     if error:
         return "Error: " + error
@@ -76,7 +75,6 @@ def elixir_callback():
     # a session for use in other parts of your web app.
     #userdetails = get_userdetails(access_token)  # DISABLED FOR NOW
     #response = app.make_response(userdetails)
-    LOG.info('callback 2')
     try:
         response = app.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
         response.set_cookie('access_token',
@@ -84,7 +82,6 @@ def elixir_callback():
                             max_age=int(os.environ.get('COOKIE_AGE', 3600)),
                             secure=os.environ.get('COOKIE_SECURE', True),
                             domain=os.environ.get('COOKIE_DOMAIN', None))
-        LOG.info('cookie is set')
     except Exception as e:
         LOG.error(f'{e}')
     return response
