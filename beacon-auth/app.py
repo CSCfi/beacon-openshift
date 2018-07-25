@@ -81,7 +81,7 @@ def elixir_callback():
         response = app.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
         response.set_cookie('access_token',
                             access_token,
-                            max_age=os.environ.get('COOKIE_AGE', 3600),
+                            max_age=int(os.environ.get('COOKIE_AGE', 3600)),
                             secure=os.environ.get('COOKIE_SECURE', True),
                             domain=os.environ.get('COOKIE_DOMAIN', None))
         LOG.info('cookie is set')
