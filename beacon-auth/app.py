@@ -86,7 +86,7 @@ def elixir_callback():
                             domain=os.environ.get('COOKIE_DOMAIN', None))
         LOG.info('cookie is set')
     except Exception as e:
-        LOG.error(str(e))
+        LOG.error(f'{e}')
     return response
 
 
