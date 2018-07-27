@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, abort, request, make_response, session
+from flask import Flask, abort, request, make_response, session, redirect
 from uuid import uuid4
 import os
 import logging
@@ -11,7 +11,7 @@ import urllib.parse
 
 CLIENT_ID = os.environ.get('CLIENT_ID', None)
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
-REDIRECT_URI = os.environ.get('REDIRECT_URI', None)
+CALLBACK_URL = os.environ.get('CALLBACK_URL', None)
 
 # Logging
 FORMAT = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(funcName)s: %(message)s'
@@ -45,7 +45,7 @@ def make_authorization_url():
     params = {"client_id": CLIENT_ID,
               "response_type": "code",
               "state": state,
-              "redirect_uri": REDIRECT_URI,
+              "redirect_uri": CALLBACK_URL,
               "duration": "temporary",
               "scope": 'openid bona_fide_status'}
     url = "https://login.elixir-czech.org/oidc/authorize?" + urllib.parse.urlencode(params)
@@ -73,13 +73,17 @@ def elixir_callback():
     access_token = get_token(code)
     # Note: In most cases, you'll want to store the access token, in, say,
     # a session for use in other parts of your web app.
-    userdetails = get_userdetails(access_token)
-    response = app.make_response(userdetails)
-    response.set_cookie('access_token',
-                        access_token,
-                        max_age=os.environ.get('COOKIE_AGE', 3600),
-                        secure=os.environ.get('COOKIE_SECURE', True),
-                        domain=os.environ.get('COOKIE_DOMAIN', '.rahtiapp.fi'))
+    #userdetails = get_userdetails(access_token)  # DISABLED FOR NOW
+    #response = app.make_response(userdetails)
+    try:
+        response = app.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
+        response.set_cookie('access_token',
+                            access_token,
+                            max_age=int(os.environ.get('COOKIE_AGE', 3600)),
+                            secure=os.environ.get('COOKIE_SECURE', True),
+                            domain=os.environ.get('COOKIE_DOMAIN', None))
+    except Exception as e:
+        LOG.error(f'{e}')
     return response
 
 
@@ -87,7 +91,7 @@ def get_token(code):
     client_auth = requests.auth.HTTPBasicAuth(CLIENT_ID, CLIENT_SECRET)
     post_data = {"grant_type": "authorization_code",
                  "code": code,
-                 "redirect_uri": REDIRECT_URI}
+                 "redirect_uri": CALLBACK_URL}
     headers = base_headers()
     response = requests.post("https://login.elixir-czech.org/oidc/token",
                              auth=client_auth,
@@ -96,7 +100,7 @@ def get_token(code):
     token_json = response.json()
     return token_json['access_token']
 
-
+''' DISABLED FOR TESTING
 def get_userdetails(access_token):
     headers = base_headers()
     headers.update({"Authorization": "Bearer " + access_token})
@@ -104,11 +108,11 @@ def get_userdetails(access_token):
                             headers=headers)
     userdetails = response.json()
     return userdetails['sub']
-
+'''
 
 def main():
     app.secret_key = os.environ.get('COOKIE_SECRET', None)
-    #app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
+    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
     app.run(host=os.environ.get('APP_HOST', 'localhost'),
             port=os.environ.get('APP_PORT', 8080),
             debug=os.environ.get('APP_DEBUG', True))
