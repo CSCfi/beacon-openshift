@@ -26,10 +26,6 @@ def hello():
     """
     return "\nBeacon 2.0 API\n"
 
-@app.route("/coo")
-def check():
-    cookie = request.cookies.get('access_token')
-    return cookie
 
 @app.route("/api")
 def api():
