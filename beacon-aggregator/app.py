@@ -89,7 +89,8 @@ async def query(beacon, q):
     access_token = None
     async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar) as session:
         try:
-            for cookie in session.cookie_jar:
+            cookies = session.cookie_jar.filter_cookies(os.environ.get('COOKIE_DOMAIN', None))
+            for cookie in cookies:
                 if cookie.key == 'access_token':
                     access_token = cookie.value
             async with session.get(beacon,
