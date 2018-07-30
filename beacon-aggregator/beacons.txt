@@ -1,0 +1,3 @@
+https://beacon-mockup-beacon.rahtiapp.fi/api/true
+https://beacon-mockup-beacon.rahtiapp.fi/api/false
+https://beacon-mockup-beacon.rahtiapp.fi/api/null
