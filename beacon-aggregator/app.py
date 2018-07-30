@@ -30,15 +30,7 @@ def get_beacons():
     beacons = []
     with open(beacon_list, 'r') as f:
         beacons = [line.strip() for line in f]
-    return beacons
-
-'''
-async def get_access_token():
-    COOKIE_DOMAIN = os.environ.get('COOKIE_DOMAIN', None)
-    cookies = {}  # cookies will be stored here
-    async with aiohttp.ClientSession() as session:
-        async with session.get(COOKIE_DOMAIN) as response:
-'''            
+    return beacons  
 
 
 @routes.get('/q')
@@ -69,7 +61,6 @@ async def query_string_endpoint(request):
     q = request.query_string  # query parameters, pass all
     tasks = []  # requests to-be-done are appended here
     BEACONS = get_beacons()  # list of beacon urls
-    #access_token = await get_access_token()
 
     for beacon in BEACONS:
         task = asyncio.ensure_future(query(beacon, q))
