@@ -32,15 +32,13 @@ def get_beacons():
         beacons = [line.strip() for line in f]
     return beacons
 
-
+'''
 async def get_access_token():
     COOKIE_DOMAIN = os.environ.get('COOKIE_DOMAIN', None)
     cookies = {}  # cookies will be stored here
-    async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar) as session:
+    async with aiohttp.ClientSession() as session:
         async with session.get(COOKIE_DOMAIN) as response:
-            for cookie in session.cookie_jar:
-                if cookie.key == 'access_token':
-                    return cookie.value  # contains string of access_token
+'''            
 
 
 @routes.get('/q')
@@ -71,10 +69,10 @@ async def query_string_endpoint(request):
     q = request.query_string  # query parameters, pass all
     tasks = []  # requests to-be-done are appended here
     BEACONS = get_beacons()  # list of beacon urls
-    access_token = await get_access_token()
+    #access_token = await get_access_token()
 
     for beacon in BEACONS:
-        task = asyncio.ensure_future(query(beacon, q, access_token))
+        task = asyncio.ensure_future(query(beacon, q))
         tasks.append(task)
         LOG.info(f'Making request to {beacon}')
     try:
@@ -95,14 +93,21 @@ async def query_string_endpoint(request):
     return resp
 
 
-async def query(beacon, q, access_token):
+async def query(beacon, q):
     """Query the beacon endpoint."""
-    async with aiohttp.ClientSession() as session:
-        async with session.get(beacon,
-                               params=q,
-                               ssl=os.environ.get('HTTPS_ONLY', True),
-                               headers={'Authorization': 'Bearer '+access_token}) as response:
-            return await response.json()
+    access_token = None
+    async with aiohttp.ClientSession(cookie_jar=aiohttp.CookieJar) as session:
+        try:
+            for cookie in session.cookie_jar:
+                if cookie.key == 'access_token':
+                    access_token = cookie.value
+            async with session.get(beacon,
+                                params=q,
+                                ssl=os.environ.get('HTTPS_ONLY', True),
+                                headers={'Authorization': 'Bearer '+access_token}) as response:
+                return await response.json()
+        except Exception as e:
+            LOG.info(str(e))
 
 
 def main():
