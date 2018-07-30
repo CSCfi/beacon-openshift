@@ -26,7 +26,7 @@ async def health_check(request):
 
 def get_beacons():
     """Read beacon URLs from a file and return them in a list"""
-    beacon_list = os.environ.get('BEACON_LIST', 'beacons2.txt')
+    beacon_list = os.environ.get('BEACON_LIST', 'beacons.txt')
     beacons = []
     with open(beacon_list, 'r') as f:
         beacons = [line.strip() for line in f]
