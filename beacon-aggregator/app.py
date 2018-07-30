@@ -93,9 +93,9 @@ async def query(beacon, q):
                 if cookie.key == 'access_token':
                     access_token = cookie.value
             async with session.get(beacon,
-                                params=q,
-                                ssl=os.environ.get('HTTPS_ONLY', True),
-                                headers={'Authorization': 'Bearer '+access_token}) as response:
+                                   params=q,
+                                   ssl=os.environ.get('HTTPS_ONLY', True),
+                                   headers={'Authorization': 'Bearer '+access_token}) as response:
                 return await response.json()
         except Exception as e:
             LOG.info(str(e))
