@@ -66,21 +66,21 @@ async def query_string_endpoint(request):
         task = asyncio.ensure_future(query(beacon, q))
         tasks.append(task)
         LOG.info(f'Making request to {beacon}')
-    try:
-        await resp.write(b'[')
-        for index, res in enumerate(asyncio.as_completed(tasks)):
-            if index == len(tasks)-1:
-                await resp.write(json.dumps(await res).encode('utf-8'))
-                LOG.info('Last item has been processed')
-            else:
-                await resp.write(json.dumps(await res).encode('utf-8') + b',')
-                LOG.info('Processing requests')
-        await resp.write(b']')
-        await resp.drain()
-        await resp.write_eof()
-        LOG.info('All requests have been completed')
-    except Exception as e:
-        LOG.error(f'Something went bad: {e}')
+    #try:
+    await resp.write(b'[')
+    for index, res in enumerate(asyncio.as_completed(tasks)):
+        if index == len(tasks)-1:
+            await resp.write(json.dumps(await res).encode('utf-8'))
+            LOG.info('Last item has been processed')
+        else:
+            await resp.write(json.dumps(await res).encode('utf-8') + b',')
+            LOG.info('Processing requests')
+    await resp.write(b']')
+    await resp.drain()
+    await resp.write_eof()
+    LOG.info('All requests have been completed')
+    #except Exception as e:
+    #    LOG.error(f'Something went bad: {e}')
     return resp
 
 
