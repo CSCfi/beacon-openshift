@@ -87,7 +87,7 @@ async def query_string_endpoint(request):
 async def query(beacon, q):
     """Query the beacon endpoint."""
     access_token = 'abc123'
-    jar = aiohttp.CookieJar(unsafe=True)
+    jar = aiohttp.CookieJar(unsafe=False)
     async with aiohttp.ClientSession(cookie_jar=jar) as session:
         #try:
         #cookies = session.cookie_jar.filter_cookies(os.environ.get('COOKIE_DOMAIN', None))
