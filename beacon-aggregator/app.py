@@ -95,7 +95,7 @@ async def query(beacon, q):
         cookies = session.cookie_jar
         print(cookies)
         print('\n\n')
-        for cookie in cookies:
+        for cookie in cookies.items():
             print(cookie)
             print('\n\n')
         
