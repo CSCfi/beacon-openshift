@@ -65,16 +65,16 @@ async def query_string_endpoint(request):
     for beacon in BEACONS:
         task = asyncio.ensure_future(query(beacon, q))
         tasks.append(task)
-        LOG.info(f'Making request to {beacon}')
+        LOG.info(f'Queueing request to {beacon} with {q}')
     try:
         await resp.write(b'[')
         for index, res in enumerate(asyncio.as_completed(tasks)):
             if index == len(tasks)-1:
                 await resp.write(json.dumps(await res).encode('utf-8'))
-                LOG.info('Last item has been processed')
+                LOG.info(f'Processing requests {index+1}/{len(tasks)}')
             else:
                 await resp.write(json.dumps(await res).encode('utf-8') + b',')
-                LOG.info('Processing requests')
+                LOG.info(f'Processing requests {index+1}/{len(tasks)}')
         await resp.write(b']')
         await resp.drain()
         await resp.write_eof()
@@ -104,6 +104,7 @@ async def query(beacon, q):
                                params=q,
                                ssl=os.environ.get('HTTPS_ONLY', True),
                                headers={'Authorization': 'Bearer '+access_token}) as response:
+            LOG.info(f'Made request to {beacon} with {q}, received {response.json()}')
             return await response.json()
         #except Exception as e:
         #    LOG.info(str(e))
