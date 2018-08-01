@@ -88,18 +88,18 @@ async def query(beacon, q):
     """Query the beacon endpoint."""
     jar = aiohttp.CookieJar(unsafe=False)
     async with aiohttp.ClientSession(cookie_jar=jar) as session:
-        try:
-            cookies = session.cookie_jar
-            for cookie in cookies:
-                if cookie.key == 'access_token':
-                    #access_token = cookie.value
-                    async with session.get(beacon,
-                                           params=q,
-                                           ssl=os.environ.get('HTTPS_ONLY', True),
-                                           headers={'Authorization': 'Bearer '+cookie.value}) as response:
-                        return await response.json()
-        except Exception as e:
-            LOG.info(str(e))
+        #try:
+        cookies = session.cookie_jar
+        for cookie in cookies:
+            if cookie.key == 'access_token':
+                #access_token = cookie.value
+                async with session.get(beacon,
+                                       params=q,
+                                       ssl=os.environ.get('HTTPS_ONLY', True),
+                                       headers={'Authorization': 'Bearer '+cookie.value}) as response:
+                    return await response.json()
+        #except Exception as e:
+        #    LOG.info(str(e))
 
 
 def main():
