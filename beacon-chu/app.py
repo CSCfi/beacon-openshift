@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request
+from flask import Flask, request, abort
+import os
 
 app = Flask(__name__)
 # CHU: Cookie Hack Utility
@@ -13,8 +14,10 @@ def health():
 
 @app.route('/getcookie')
 def getcookie():
-    cookie = request.cookies.get('access_token')
-    return cookie
+    if request.headers['Cookie-Secret'] == os.environ.get('COOKIE_SECRET', None):
+        return request.cookies.get('access_token')
+    else:
+        return abort(401)
 
 
 def main():
