@@ -92,7 +92,7 @@ async def query(beacon, q):
         LOG.info('2')
         #try:
         cookies = session.cookie_jar
-        LOG.info('cookies')
+        LOG.info(cookies)
         for cookie in cookies:
             LOG.info('3')
             LOG.info(cookie)
