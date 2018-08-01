@@ -91,7 +91,7 @@ async def query(beacon, q):
     async with aiohttp.ClientSession(cookie_jar=jar) as session:
         LOG.info('2')
         #try:
-        LOG.info(session.cookie_jar)
+        LOG.info(list(session.cookie_jar))
         for cookie in session.cookie_jar:
             LOG.info('3')
             LOG.info(cookie)
