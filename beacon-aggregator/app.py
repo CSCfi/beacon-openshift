@@ -66,51 +66,40 @@ async def query_string_endpoint(request):
         task = asyncio.ensure_future(query(beacon, q))
         tasks.append(task)
         LOG.info(f'Making request to {beacon}')
-    #try:
-    await resp.write(b'[')
-    for index, res in enumerate(asyncio.as_completed(tasks)):
-        if index == len(tasks)-1:
-            await resp.write(json.dumps(await res).encode('utf-8'))
-            LOG.info('Last item has been processed')
-        else:
-            await resp.write(json.dumps(await res).encode('utf-8') + b',')
-            LOG.info('Processing requests')
-    await resp.write(b']')
-    await resp.drain()
-    await resp.write_eof()
-    LOG.info('All requests have been completed')
-    #except Exception as e:
-    #    LOG.error(f'Something went bad: {e}')
+    try:
+        await resp.write(b'[')
+        for index, res in enumerate(asyncio.as_completed(tasks)):
+            if index == len(tasks)-1:
+                await resp.write(json.dumps(await res).encode('utf-8'))
+                LOG.info('Last item has been processed')
+            else:
+                await resp.write(json.dumps(await res).encode('utf-8') + b',')
+                LOG.info('Processing requests')
+        await resp.write(b']')
+        await resp.drain()
+        await resp.write_eof()
+        LOG.info('All requests have been completed')
+    except Exception as e:
+        LOG.error(f'Something went bad: {e}')
     return resp
 
 
 async def query(beacon, q):
     """Query the beacon endpoint."""
-    access_token = 'abc123'
     jar = aiohttp.CookieJar(unsafe=False)
     async with aiohttp.ClientSession(cookie_jar=jar) as session:
-        #try:
-        #cookies = session.cookie_jar.filter_cookies(os.environ.get('COOKIE_DOMAIN', None))
-        #access_token = cookies['access_token'].value
-        
-        cookies = session.cookie_jar
-        print(len(cookies))
-        print('\n\n')
-        for cookie in cookies:
-            print(cookie)
-            print('\n\n')
-        
-        #LOG.info(cookies.keys())
-        '''for cookie in cookies:
-            if cookie.key == 'access_token':
-                access_token = cookie.value'''
-        async with session.get(beacon,
-                               params=q,
-                               ssl=os.environ.get('HTTPS_ONLY', True),
-                               headers={'Authorization': 'Bearer '+access_token}) as response:
-            return await response.json()
-        #except Exception as e:
-        #    LOG.info(str(e))
+        try:
+            cookies = session.cookie_jar
+            for cookie in cookies:
+                if cookie.key == 'access_token':
+                    #access_token = cookie.value
+                    async with session.get(beacon,
+                                           params=q,
+                                           ssl=os.environ.get('HTTPS_ONLY', True),
+                                           headers={'Authorization': 'Bearer '+cookie.value}) as response:
+                        return await response.json()
+        except Exception as e:
+            LOG.info(str(e))
 
 
 def main():
@@ -128,7 +117,7 @@ def main():
         cors.add(route)
     web.run_app(server,
                 host=os.environ.get('APP_HOST', 'localhost'),
-                port=os.environ.get('APP_PORT', 5000))
+                port=os.environ.get('APP_PORT', 8080))
 
 
 if __name__ == '__main__':
