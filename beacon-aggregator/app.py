@@ -87,9 +87,15 @@ async def query_string_endpoint(request):
 async def query(beacon, q):
     """Query the beacon endpoint."""
     jar = aiohttp.CookieJar(unsafe=False)
+    LOG.info(jar)
     async with aiohttp.ClientSession(cookie_jar=jar) as session:
+        LOG.info(session.cookie_jar)
+        LOG.info(list(session.cookie_jar))
         for morsel in list(session.cookie_jar):
+            LOG.info(morsel)
             if morsel.key == 'access_token':
+                LOG.info(morsel.key)
+                LOG.info(morsel.value)
                 access_token = morsel.value
                 LOG.info(access_token)  # REMOVE THIS LATER
                 async with session.get(beacon,
