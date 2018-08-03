@@ -63,7 +63,7 @@ async def query_string_endpoint(request):
     BEACONS = get_beacons()  # list of beacon urls
 
     for beacon in BEACONS:
-        task = asyncio.ensure_future(query(beacon, q))
+        task = asyncio.ensure_future(query(beacon, q, request))
         tasks.append(task)
         LOG.info(f'Queueing request to {beacon} with {q}')
     try:
@@ -91,7 +91,7 @@ async def get_access_token(request):
     return response
 
 
-async def query(beacon, q):
+async def query(beacon, q, request):
     """Query the beacon endpoint."""
     LOG.info('1')
     jar = aiohttp.CookieJar()
