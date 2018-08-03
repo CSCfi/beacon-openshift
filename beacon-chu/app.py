@@ -14,10 +14,11 @@ def health():
 
 @app.route('/getcookie')
 def getcookie():
-    if request.headers['Cookie-Secret'] == os.environ.get('COOKIE_SECRET', None):
+    '''if request.headers['Cookie-Secret'] == os.environ.get('COOKIE_SECRET', None):
         return request.cookies.get('access_token')
     else:
-        return abort(401)
+        return abort(401)'''
+    return request.cookies.get('access_token')
 
 
 def main():
