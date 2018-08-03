@@ -83,29 +83,19 @@ async def query_string_endpoint(request):
         LOG.error(f'Something went bad: {e}')
     return resp
 
-'''
-async def get_access_token(request):
-    """Get access_token from cookies and return it"""
-    response = web.Response(content_type='text/plain')
-    response.text = request.cookies['access_token']
-    return response
-'''
 
 async def query(beacon, q, access_token):
     """Query the beacon endpoint."""
-    LOG.info('1')
     async with aiohttp.ClientSession() as session:
-        #try:
-        LOG.info(access_token)
-        async with session.get(beacon,
-                               params=q,
-                               ssl=os.environ.get('HTTPS_ONLY', True),
-                               headers={'Authorization': 'Bearer '+access_token}) as response:
-            LOG.info(f'Made request to {beacon} with {q}, received {response.json()}')
-            return await response.json()
-        #except Exception as e:
-        #    LOG.info(str(e))
-    LOG.info('5')
+        try:
+            async with session.get(beacon,
+                                   params=q,
+                                   ssl=os.environ.get('HTTPS_ONLY', True),
+                                   headers={'Authorization': 'Bearer '+access_token}) as response:
+                LOG.info(f'Made request to {beacon} with {q}')
+                return await response.json()
+        except Exception as e:
+            LOG.info(str(e))
 
 
 def main():
