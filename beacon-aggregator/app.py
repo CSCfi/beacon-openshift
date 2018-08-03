@@ -84,6 +84,13 @@ async def query_string_endpoint(request):
     return resp
 
 
+async def get_access_token(request):
+    """Get access_token from cookies and return it"""
+    response = web.Response(content_type='text/plain')
+    response.text = request.cookies['access_token']
+    return response
+
+
 async def query(beacon, q):
     """Query the beacon endpoint."""
     LOG.info('1')
@@ -100,7 +107,8 @@ async def query(beacon, q):
                 LOG.info(cookie.key)
                 LOG.info(cookie.value)
                 access_token = cookie.value'''
-        access_token = 'verygoodtoken'
+        access_token = await get_access_token()
+        LOG.info(access_token)
         async with session.get(beacon,
                                params=q,
                                ssl=os.environ.get('HTTPS_ONLY', True),
