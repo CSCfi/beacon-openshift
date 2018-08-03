@@ -15,7 +15,6 @@ angular.module('myApp.view2', ['ngRoute'])
   $scope.assembly = {selected: 'GRCh38'};
   $scope.url = '';
   $scope.cookieLoggedIn = false;
-  console.log(document.cookie.indexOf('access_token'));
 	
 
   $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi/api?';
