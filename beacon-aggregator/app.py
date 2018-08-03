@@ -107,7 +107,7 @@ async def query(beacon, q):
                 LOG.info(cookie.key)
                 LOG.info(cookie.value)
                 access_token = cookie.value'''
-        access_token = await get_access_token()
+        access_token = await get_access_token(request)
         LOG.info(access_token)
         async with session.get(beacon,
                                params=q,
