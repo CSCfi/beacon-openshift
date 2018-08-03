@@ -89,7 +89,7 @@ async def query(beacon, q):
     LOG.info('1')
     jar = aiohttp.CookieJar()
     async with aiohttp.ClientSession(cookie_jar=jar) as session:
-        LOG.info('2')
+        '''LOG.info('2')
         #try:
         LOG.info(list(session.cookie_jar))
         for cookie in session.cookie_jar:
@@ -99,7 +99,8 @@ async def query(beacon, q):
                 LOG.info('4')
                 LOG.info(cookie.key)
                 LOG.info(cookie.value)
-                access_token = cookie.value
+                access_token = cookie.value'''
+        access_token = 'verygoodtoken'
         async with session.get(beacon,
                                params=q,
                                ssl=os.environ.get('HTTPS_ONLY', True),
