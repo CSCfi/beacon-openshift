@@ -36,7 +36,9 @@ def get_beacons():
 @routes.get('/q')
 async def query_string_endpoint(request):
     """Stream the response from the query and package it nicely."""
-
+    
+    LOG.info(request.cookies['access_token'])
+    
     # A COMPLETE LIST OF PARAMETERS
     '''
     q = {'referenceName': request.rel_url.query['referenceName'],
@@ -63,7 +65,7 @@ async def query_string_endpoint(request):
     BEACONS = get_beacons()  # list of beacon urls
 
     for beacon in BEACONS:
-        task = asyncio.ensure_future(query(beacon, q, request))
+        task = asyncio.ensure_future(query(beacon, q))
         tasks.append(task)
         LOG.info(f'Queueing request to {beacon} with {q}')
     try:
@@ -83,15 +85,15 @@ async def query_string_endpoint(request):
         LOG.error(f'Something went bad: {e}')
     return resp
 
-
+'''
 async def get_access_token(request):
     """Get access_token from cookies and return it"""
     response = web.Response(content_type='text/plain')
     response.text = request.cookies['access_token']
     return response
+'''
 
-
-async def query(beacon, q, request):
+async def query(beacon, q):
     """Query the beacon endpoint."""
     LOG.info('1')
     jar = aiohttp.CookieJar()
@@ -107,7 +109,7 @@ async def query(beacon, q, request):
                 LOG.info(cookie.key)
                 LOG.info(cookie.value)
                 access_token = cookie.value'''
-        access_token = await get_access_token(request)
+        access_token = 'secret'
         LOG.info(access_token)
         async with session.get(beacon,
                                params=q,
