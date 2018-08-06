@@ -11,19 +11,16 @@ CORS(app)
 
 @app.route("/api/true")
 def mock_true():
-    print(request.headers)
     return jsonify({'beacon': 'Always True', 'response': True, 'query': request.args})
 
 
 @app.route("/api/false")
 def mock_false():
-    print(request.headers)
     return jsonify({'beacon': 'Always False', 'response': False, 'query': request.args})
 
 
 @app.route("/api/null")
 def mock_null():
-    print(request.headers)
     return jsonify({'beacon': 'Always Null', 'response': None, 'query': request.args})
 
 
