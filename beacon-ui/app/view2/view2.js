@@ -35,7 +35,7 @@ angular.module('myApp.view2', ['ngRoute'])
     } else if ($scope.search.type == 'variant') {
       console.log('search type: ' + $scope.search.type);
       var qs = $scope.search.query.split(" ");
-      $scope.url = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?ref='+$scope.assembly.selected+'&chrom='+qs[0]+'&pos='+qs[2]+'&allele='+qs[5];
+      $scope.url = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?assemblyId='+$scope.assembly.selected+'&referenceName='+qs[0]+'&start='+qs[2]+'&referenceBases='+qs[3]+'&alternateBases='+qs[5];
       console.log($scope.url);
       $scope.message = 'q';
     } else {
