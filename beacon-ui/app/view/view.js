@@ -1,26 +1,52 @@
 'use strict';
 
-angular.module('myApp.view2', ['ngRoute'])
+angular.module('myApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/view2', {
-    templateUrl: 'view2/view2.html',
-    controller: 'View2Ctrl'
+  $routeProvider.when('/view', {
+    templateUrl: 'view/view.html',
+    controller: 'ViewCtrl'
   });
 }])
 
-.controller('View2Ctrl', ['$scope', '$http', function($scope, $http) {
+.controller('ViewCtrl', ['$scope', '$http', function($scope, $http) {
   $scope.message = "";
   $scope.search = {type: 'disease', query: ''};
-  $scope.assembly = {selected: 'GRCh38'};
+  $scope.assembly = {selected: ''};
   $scope.url = '';
   $scope.cookieLoggedIn = false;
-	
 
   $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi/api?';
   $scope.urlDisease = 'disease=';
   $scope.urlGene = 'gene=';
   $scope.urlAssembly = '&assembly=';
+
+  $scope.aggregatorUrl = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?';
+
+  $scope.selectedItem = null;
+
+
+  function makeUrl(searchtype, query) {
+    if (searchtype == 'disease') {
+      return $scope.baseUrl + $scope.urlDisease + query
+    } else if (searchtype == 'gene') {
+      return $scope.baseUrl + $scope.urlGene + query
+    } else if (searchtype == 'variant') {
+      return $scope.aggregatorUrl + query
+    } else {
+      return 'Invalid Searchtype'
+    }
+  }
+
+  this.querySearch = function(query){
+    return $http.get($scope.baseUrl, {params: {type: $scope.search.type, query: query}})
+    // return $http.get(makeUrl($scope.search.type, query))
+    .then(function(response){
+      return response.data;
+    })
+  }
+
+
 
   // Simple GET request example:
   $scope.submit = function() {
@@ -35,7 +61,7 @@ angular.module('myApp.view2', ['ngRoute'])
     } else if ($scope.search.type == 'variant') {
       console.log('search type: ' + $scope.search.type);
       var qs = $scope.search.query.split(" ");
-      $scope.url = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?assemblyId='+$scope.assembly.selected+'&referenceName='+qs[0]+'&start='+qs[2]+'&referenceBases='+qs[3]+'&alternateBases='+qs[5];
+      $scope.url = 'http://localhost:5000/q?ref='+$scope.assembly.selected+'&chrom='+qs[0]+'&pos='+qs[2]+'&allele='+qs[5];
       console.log($scope.url);
       $scope.message = 'q';
     } else {
@@ -48,7 +74,7 @@ angular.module('myApp.view2', ['ngRoute'])
     }).then(function successCallback(response) {
         console.log(response);
         $scope.message = response;
-        //$scope.disease = response.data[0].disease;	
+        //$scope.disease = response.data[0].disease;
         // this callback will be called asynchronously
         // when the response is available
       }, function errorCallback(response) {
@@ -82,7 +108,7 @@ angular.module('myApp.view2', ['ngRoute'])
     }).then(function successCallback(response) {
         console.log(response);
         $scope.message = response;
-        //$scope.disease = response.data[0].disease;	
+        //$scope.disease = response.data[0].disease;
         // this callback will be called asynchronously
         // when the response is available
       }, function errorCallback(response) {
@@ -97,14 +123,14 @@ angular.module('myApp.view2', ['ngRoute'])
     $scope.search.type = 'variant';
     $scope.assembly.selected = assembly;
     $scope.search.query = chr + ' : ' + pos + ' ' + ref + ' > ' + alt;
-    
+
     $http({
       method: 'GET',
-      url: 'https://beacon-aggregator-beacon.rahtiapp.fi/q?ref='+assembly+'&chrom='+chr+'&pos='+pos+'&allele='+alt
+      url: 'http://localhost:5000/q?ref='+assembly+'&chrom='+chr+'&pos='+pos+'&allele='+alt
     }).then(function successCallback(response) {
         console.log(response);
         $scope.message = response;
-        //$scope.disease = response.data[0].disease;	
+        //$scope.disease = response.data[0].disease;
         // this callback will be called asynchronously
         // when the response is available
       }, function errorCallback(response) {
@@ -140,8 +166,8 @@ angular.module('myApp.view2', ['ngRoute'])
 	  url: 'http://86.50.169.120:9000/d/' + $scope.search.query + '/more'
 	}).then(function successCallback(response) {
 	    console.log(response);
-	    $scope.message = response;	
-	    $scope.disease = response.data[0].disease;	
+	    $scope.message = response;
+	    $scope.disease = response.data[0].disease;
 	    // this callback will be called asynchronously
 	    // when the response is available
 	  }, function errorCallback(response) {

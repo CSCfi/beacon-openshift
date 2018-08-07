@@ -21,9 +21,9 @@
 	position: relative;
 }
 
-.search-input {
+/* .search-input {
 	width: 500px !important;
-}
+} */
 
 .icon_animation {
 	-webkit-animation: spin 2s linear infinite;
@@ -61,7 +61,7 @@
 }
 
 .result-contents {
-	
+
 }
 
 .beacon-container {
@@ -85,4 +85,15 @@
 
 .user-logged-in {
 	color: #F57C20;
+}
+
+.searchRow {
+	width: 100%;
+}
+.searchSelect {
+	width: 25%;
+}
+.searchBox {
+	width: 70%;
+	height:10px;
 }
