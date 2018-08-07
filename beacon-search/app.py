@@ -1,7 +1,7 @@
 #!/usr/bin/env python3.4
 
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from flask_cors import CORS
 import pymysql
 import logging
@@ -39,8 +39,8 @@ def api():
     assemblies = ['GRCh37', 'GRCh38']
 
     # Query for Diseases
-    if request.args.get('disease'):
-        query['disease'] = request.args.get('disease')
+    if request.args.get('type') == 'disease':
+        query['disease'] = request.args.get('query')
     
         if len(query['disease']) > 3:
             try:
@@ -63,9 +63,10 @@ def api():
                 cur.connection.close()
         else:
             return jsonify({'http': 400, 'msg': 'Disease name must be at least 4 characters long.'})
-    elif request.args.get('gene') and request.args.get('assembly'):  # Query for Genes
-        query['gene'] = request.args.get('gene')
-        query['assembly'] = request.args.get('assembly')
+    elif request.args.get('type') == 'gene':
+
+        query['gene'] = request.args.get('query')
+        query['assembly'] = 'GRCh38'  # Look into this later
     
         if query['gene'] and any(a in query['assembly'] for a in assemblies):
             try:
