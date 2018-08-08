@@ -1,10 +1,10 @@
 'use strict';
 
 // Declare app level module which depends on views, and components
-angular.module('myApp', [
+angular.module('beaconApp', [
   'ngRoute',
-  'myApp.view',
-  'myApp.version'
+  'beaconApp.view',
+  'beaconApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {
   $locationProvider.hashPrefix('!');
