@@ -4,12 +4,12 @@
 <h2 style="text-align:center;"><a href="https://beacon-ui-beacon.rahtiapp.fi"><img id="logo" src="assets/beacon-small-3.png" /></a></h2>
 
 <!--<div class="row row-backbordered"> BREAKS THE DOCUMENT-->
-<div class="col-sm-12">
+<div class="col-sm-12" ng-controller="ViewCtrl as ctrl" ng-cloak>
   <div class="card search-card">
     <div class="card-body">
-      <div class="searchForm" layout="column" ng-controller="ViewCtrl as ctrl" ng-cloak>
+      <div class="searchForm" layout="column">
       <md-content class="md-padding">
-      <form name="searchForm" ng-submit="submit()" class="form-inline" method="get" action="#">
+      <form name="searchForm" ng-submit="submit()" class="form-inline">
           <div layout-gt-sm="row" class="searchRow">
           <md-input-container>
           <md-select ng-model="search.type" aria-label="Select disease, gene or variant">
@@ -29,6 +29,7 @@
             md-input-name="autocompleteField"
             md-search-text="ctrl.searchText"
             md-items="item in ctrl.querySearch(ctrl.searchText)"
+            md-selected-item="ctrl.selectedItem"
             md-item-text="item.name"
             md-min-length="0"
             class="searchBox"
@@ -36,7 +37,7 @@
             md-delay="300"
             md-menu-class="autocomplete-custom-template"
             md-menu-container-class="custom-container"
-            md-floating-label="Search for disease name, gene name or variant">
+            md-floating-label="Select a disease or gene name / Input a variant">
 
             <md-item-template>
               <div class="item-type">
@@ -72,9 +73,9 @@
       <div style="text-align:center"><a href="" ng-click="searchExample(search.type)">Show example search term</a></div>
     </div>
   </div>
-  <!--<div ng-if="search.type == 'disease' && url.includes('disease')" class="row result-row">-->
-  <div ng-if="search.type == 'disease' && url.includes('disease') && message.data.http !== 404 && message.data.http !== 400" class="row result-row">
-    <div ng-repeat="datum in message.data">
+
+  <div ng-if="url.includes('disease') && ctrl.message.status == 200" class="row result-row">
+    <div ng-repeat="datum in ctrl.message.data">
       <div class="result-box"><div class="result-header" title="Disease Genotype">{{ datum.genotype_name || "Genotype n/a" }}</div>
                                     <div class="result-contents"><b>Phenotype:</b> {{ datum.phenotype_name }}<br>
                                     <b>Gene:</b> {{ datum.gene }}<br>
@@ -84,8 +85,7 @@
                                   </div>
     </div>
   </div>
-  <!--<div ng-if="search.type == 'gene' && url.includes('gene')" class="result-row">-->
-  <div ng-if="search.type == 'gene' && url.includes('gene') && message.data.http !== 404 && message.data.http !== 400" class="result-row">
+  <div ng-if="url.includes('gene') && message.status == 200" class="result-row">
       <div ng-repeat="datum in message.data">
         <div class="result-box"><div class="result-header">{{datum.chr}} : {{datum.chrpos}} {{datum.ref}} > {{datum.alt}}</div>
                                       <div class="result-contents"><b>Assembly:</b> {{ datum.assembly }}<br>
