@@ -15,7 +15,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   that.selectedItem = "";
   that.message = "";
   $scope.search = {type: 'disease', query: ''};
-  $scope.assembly = {selected: ''};
+  $scope.assembly = {selected: 'GRCh38'};
   $scope.url = '';
   $scope.cookieLoggedIn = false;
 
@@ -62,7 +62,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
       console.log($scope.url);
     } else if ($scope.search.type == 'gene') {
       console.log('search type: ' + $scope.search.type);
-      $scope.url = $scope.baseUrl + $scope.urlGene + $scope.search.query + $scope.urlAssembly + $scope.assembly.selected;
+      $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
       console.log($scope.url);
     } else if ($scope.search.type == 'variant') {
       console.log('search type: ' + $scope.search.type);
@@ -106,8 +106,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
   $scope.goToGene = function(gene) {
     $scope.search.type = 'gene';
-    $scope.search.query = gene;
-    $scope.url = $scope.baseUrl + $scope.urlGene + $scope.search.query + $scope.urlAssembly + $scope.assembly.selected;
+    that.selectedItem = {'type': $scope.search.type, 'name': gene};
+    that.searchText = gene;
+    // $scope.url = $scope.baseUrl + $scope.urlGene + $scope.search.query + $scope.urlAssembly + $scope.assembly.selected;
 
     $http({
       method: 'GET',
