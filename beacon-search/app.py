@@ -103,7 +103,6 @@ def autocomplete():
         cur = db_cursor()
         cur.execute('SELECT DISTINCT(disease) AS name, '
                     'COUNT(DISTINCT(gene)) AS relatedGenes, '
-                    'hpo_id AS id, '
                     'COUNT(*) AS variations '
                     'FROM annotations a, changes c '
                     'WHERE c.entrez=a.entrez '
