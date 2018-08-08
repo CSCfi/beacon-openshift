@@ -99,24 +99,25 @@ def autocomplete():
     if request.args.get('q'):
         keyword = request.args.get('q')
         # search for diseases
-        try:
-            cur = db_cursor()
-            cur.execute('SELECT DISTINCT(disease) AS name, '
-                        'COUNT(DISTINCT(gene)) AS relatedGenes, '
-                        'hpo_id AS id, '
-                        'COUNT(*) AS variations '
-                        'FROM annotations a, changes c '
-                        'WHERE c.entrez=a.entrez '
-                        'AND a.disease LIKE %s '
-                        'GROUP BY a.disease;',
-                        ('%' + keyword + '%',))
-            results = cur.fetchall()
-            if len(results) == 0:
-                return jsonify({'http': 404, 'msg': 'disease not found'})
-            else:
-                return jsonify(results)
-        except Exception as e:
-            logging.info('ERROR IN /autocomplete :: ' + str(e))
+        #try:
+        cur = db_cursor()
+        cur.execute('SELECT DISTINCT(disease) AS name, '
+                    'COUNT(DISTINCT(gene)) AS relatedGenes, '
+                    'hpo_id AS id, '
+                    'COUNT(*) AS variations '
+                    'FROM annotations a, changes c '
+                    'WHERE c.entrez=a.entrez '
+                    'AND a.disease LIKE %s '
+                    'GROUP BY a.disease;',
+                    ('%' + keyword + '%',))
+        results = cur.fetchall()
+        print(results)
+        if len(results) == 0:
+            return jsonify({'http': 404, 'msg': 'disease not found'})
+        else:
+            return jsonify(results)
+        #except Exception as e:
+        #    logging.info('ERROR IN /autocomplete :: ' + str(e))
         # search for genes
 
 
