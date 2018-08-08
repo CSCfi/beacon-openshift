@@ -96,33 +96,50 @@ def autocomplete():
     This endpoint serves an autocomplete field and returns
     related information
     """
+
+    diseases = ''
+    genes = ''
+    results = []
+
     if request.args.get('q'):
         keyword = request.args.get('q')
-        # search for diseases
-        #try:
-        cur = db_cursor()
-        cur.execute('SELECT DISTINCT(disease) AS name, '
-                    'COUNT(DISTINCT(gene)) AS relatedGenes, '
-                    'COUNT(*) AS variations '
-                    'FROM annotations a, changes c '
-                    'WHERE c.entrez=a.entrez '
-                    'AND a.disease LIKE %s '
-                    'GROUP BY a.disease;',
-                    ('%' + keyword + '%',))
-        results = cur.fetchall()
-        print(results)
-        if len(results) == 0:
-            return jsonify({'http': 404, 'msg': 'disease not found'})
-        else:
-            return jsonify(results)
-        #except Exception as e:
-        #    logging.info('ERROR IN /autocomplete :: ' + str(e))
-        # search for genes
+        try:
+            # SEARCH FOR DISEASES
+            cur = db_cursor()
+            cur.execute('SELECT DISTINCT(disease) AS name, '
+                        'COUNT(DISTINCT(a.gene)) AS relatedGenes, '
+                        'COUNT(*) AS variations, '
+                        '"disease" AS type '
+                        'FROM annotations a INNER JOIN changes c '
+                        'ON a.entrez=c.entrez '
+                        'WHERE a.disease LIKE %s '
+                        'GROUP BY a.disease;',
+                        ('%' + keyword + '%',))
+            diseases = cur.fetchall()
 
+            # SEARCH FOR GENES
+            cur.execute('SELECT DISTINCT(gene) AS name, '
+                        'COUNT(*) AS variations, '
+                        '"gene" AS type '
+                        'FROM genes g, changes c '
+                        'WHERE g.entrez=c.entrez '
+                        'AND g.gene LIKE %s '
+                        'GROUP BY gene;',
+                        ('%' + keyword + '%',))
+            genes = cur.fetchall()
 
-        # merge responses
+            # ADD RESULTS TO RESPONSE LIST IF RESULTS WERE FOUND
+            if len(diseases) != 0:
+                results = results + diseases
+            if len(genes) != 0:
+                results = results + genes
 
-
+            if len(results) == 0:
+                return jsonify({'http': 404, 'msg': 'keyword not found'})
+            else:
+                return jsonify(results)
+        except Exception as e:
+            logging.info('ERROR IN /autocomplete :: ' + str(e))
     else:
         return jsonify({'http': 400, 'msg': 'Missing parameter ?q='})
 
