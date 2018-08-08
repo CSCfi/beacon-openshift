@@ -102,11 +102,12 @@ def autocomplete():
         #try:
         cur = db_cursor()
         cur.execute('SELECT DISTINCT(disease) AS name, '
-                    'COUNT(DISTINCT(gene)) AS relatedGenes, '
+                    'COUNT(DISTINCT(a.gene)) AS relatedGenes, '
+                    'hpo_id AS id, '
                     'COUNT(*) AS variations '
-                    'FROM annotations a, changes c '
-                    'WHERE c.entrez=a.entrez '
-                    'AND a.disease LIKE %s '
+                    'FROM annotations a INNER JOIN changes c '
+                    'ON a.entrez=c.entrez '
+                    'WHERE a.disease LIKE %s '
                     'GROUP BY a.disease;',
                     ('%' + keyword + '%',))
         results = cur.fetchall()
