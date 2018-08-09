@@ -12,8 +12,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 .controller('ViewCtrl', ['$scope', '$http', function($scope, $http) {
   var that = this;
   that.searchText = "";
-  that.selectedItem = "";
+  that.selectedItem = '';
   that.message = "";
+  that.searchClick = false;
   $scope.search = {type: 'disease', query: ''};
   $scope.assembly = {selected: 'GRCh38'};
   $scope.url = '';
@@ -28,6 +29,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   $scope.aggregatorUrl = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?';
 
   $scope.selectedItem = null;
+
+  that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGUN]+) \> ([ATCGUN]+)$/i;
 
 
   function makeUrl(searchtype, query) {
@@ -56,20 +59,26 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
   // Simple GET request example:
   $scope.submit = function() {
-    if ($scope.search.type == 'disease') {
-      console.log('search type: ' + $scope.search.type);
+    that.searchClick = true;
+    if (that.regexp.test(that.searchText)) {
+      that.selectedItem = {type: 'variant', name: that.searchText}
+    }
+    if (that.selectedItem.type == 'disease') {
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText;
       console.log($scope.url);
-    } else if ($scope.search.type == 'gene') {
-      console.log('search type: ' + $scope.search.type);
+    } else if (that.selectedItem.type == 'gene') {
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
       console.log($scope.url);
-    } else if ($scope.search.type == 'variant') {
-      console.log('search type: ' + $scope.search.type);
-      var qs = $scope.search.query.split(" ");
-      $scope.url = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?assemblyId='+$scope.assembly.selected+'&referenceName='+qs[0]+'&start='+qs[2]+'&referenceBases='+qs[3]+'&alternateBases='+qs[5];
+    } else if (that.selectedItem.type == 'variant') {
+      // var qs = $scope.search.query.split(" ");
+      var params = that.searchText.match(that.regexp)
+      console.log(params);
+      $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
+                   $scope.assembly.selected +
+                   '&referenceName=' + params[1] + '&start=' + params[2]+
+                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4];
       console.log($scope.url);
-      $scope.message = 'q';
+      // that.message = 'q';
     } else {
       console.log('search type unselected');
     }
@@ -94,28 +103,31 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
   $scope.searchExample = function(searchtype) {
     if (searchtype == 'disease') {
-      this.searchText = 'Alzheimer';
+      that.searchText = 'Alzheimer';
+      document.querySelector('#autoCompleteId').focus();
     } else if (searchtype == 'gene') {
-      $scope.searchText = 'APOE';
+      that.searchText = 'APOE';
+      document.querySelector('#autoCompleteId').focus();
     } else if (searchtype == 'variant') {
-      $scope.searchText = '19 : 44907807 G > A';
+      that.searchText = '19 : 44907807 G > A';
+      document.querySelector('#autoCompleteId').focus();
     } else {
-      $scope.searchText = 'Unknown';
+      that.searchText = 'Unknown';
     }
   }
 
   $scope.goToGene = function(gene) {
-    $scope.search.type = 'gene';
-    that.selectedItem = {'type': $scope.search.type, 'name': gene};
+    that.selectedItem = {'type': 'gene', 'name': gene};
     that.searchText = gene;
-    // $scope.url = $scope.baseUrl + $scope.urlGene + $scope.search.query + $scope.urlAssembly + $scope.assembly.selected;
+    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
+    console.log($scope.url);
 
     $http({
       method: 'GET',
       url: $scope.url
     }).then(function successCallback(response) {
         console.log(response);
-        $scope.message = response;
+        that.message = response;
         //$scope.disease = response.data[0].disease;
         // this callback will be called asynchronously
         // when the response is available
