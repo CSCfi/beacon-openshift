@@ -19,6 +19,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   $scope.assembly = {selected: 'GRCh38'};
   $scope.url = '';
   $scope.cookieLoggedIn = false;
+  that.triggerCredentials = false;
 
   $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi';
   $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
@@ -64,15 +65,17 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
       that.selectedItem = {type: 'variant', name: that.searchText}
     }
     if (that.selectedItem.type == 'disease') {
+      that.triggerCredentials = false;
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText;
       console.log($scope.url);
     } else if (that.selectedItem.type == 'gene') {
+      that.triggerCredentials = false;
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
       console.log($scope.url);
     } else if (that.selectedItem.type == 'variant') {
+      that.triggerCredentials = true;
       // var qs = $scope.search.query.split(" ");
       var params = that.searchText.match(that.regexp)
-      console.log(params);
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                    $scope.assembly.selected +
                    '&referenceName=' + params[1] + '&start=' + params[2]+
@@ -85,9 +88,11 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
     $http({
       method: 'GET',
-      url: $scope.url
+      url: $scope.url,
+      withCredentials: that.triggerCredentials
       // params: {}
     }).then(function successCallback(response) {
+
         console.log(response);
         that.message = response;
         //$scope.disease = response.data[0].disease;
@@ -139,17 +144,20 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   }
 
   $scope.findDatasets = function(chr, pos, ref, alt, assembly) {
-    $scope.message = 'q';
-    $scope.search.type = 'variant';
-    $scope.assembly.selected = assembly;
-    $scope.search.query = chr + ' : ' + pos + ' ' + ref + ' > ' + alt;
+    // $scope.message = 'q';
+    that.selectedItem = {type: 'variant', name: chr + ' : ' + pos + ' ' + ref + ' > ' + alt};
+    // $scope.assembly.selected = assembly;
+    // $scope.search.query =
 
     $http({
       method: 'GET',
-      url: $scope.url = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?assemblyId='+$scope.assembly.selected+'&referenceName='+qs[0]+'&start='+qs[2]+'&referenceBases='+qs[3]+'&alternateBases='+qs[5]
+      withCredentials: true,
+      url: $scope.url = $scope.aggregatorUrl + 'assemblyId='+ assembly +
+                        '&referenceName='+ chr + '&start=' + pos +
+                        '&referenceBases=' + ref + '&alternateBases=' + alt
     }).then(function successCallback(response) {
         console.log(response);
-        $scope.message = response;
+        that.message = response;
         //$scope.disease = response.data[0].disease;
         // this callback will be called asynchronously
         // when the response is available
