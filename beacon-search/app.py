@@ -65,8 +65,10 @@ def api():
             return jsonify({'http': 400, 'msg': 'Disease name must be at least 4 characters long.'})
     elif request.args.get('type') == 'gene':
 
-        query['gene'] = request.args.get('query')
-        query['assembly'] = 'GRCh38'  # Look into this later
+        # Break query params from &query=gene,assembly
+        params = request.args.get('query').split(',')
+        query['gene'] = params[0]
+        query['assembly'] = params[1]
     
         if query['gene'] and any(a in query['assembly'] for a in assemblies):
             try:
