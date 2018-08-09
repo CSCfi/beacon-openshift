@@ -149,7 +149,7 @@
       <!-- </div> -->
   </div>
   <div ng-if="url.includes('referenceName') && ctrl.message.status == 200" class="result-row">
-    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data">
       <md-card-header>
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}}</span>
