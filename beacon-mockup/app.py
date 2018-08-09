@@ -73,7 +73,7 @@ def mock_false():
 
 @app.route("/api/null")
 def mock_null():
-    return jsonify({'beaconId': 'Always True',
+    return jsonify({'beaconId': 'Always Null',
                     'apiVersion': '1.0.0',
                     'exists': None,
                     'error': None,
