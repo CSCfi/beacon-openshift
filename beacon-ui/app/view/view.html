@@ -82,7 +82,7 @@
   <div ng-if="ctrl.searchClick && !ctrl.selectedItem">
     <span>Please select a Disease, Gene or input a Variant</span>
   </div>
-  <div ng-if="url.includes('disease') && ctrl.message.status == 200" class="row result-row">
+  <div ng-if="ctrl.selectedItem && url.includes('disease') && ctrl.message.status == 200" class="row result-row">
     <!-- <div> -->
       <md-card class="resultCard" ng-repeat="datum in ctrl.message.data">
         <md-card-header>
@@ -120,7 +120,7 @@
 
     <!-- </div> -->
   </div>
-  <div ng-if="url.includes('gene') && ctrl.message.status == 200" class="row result-row">
+  <div ng-if="ctrl.selectedItem && url.includes('gene') && ctrl.message.status == 200" class="row result-row">
     <!-- <div> -->
       <md-card class="resultCard" ng-repeat="datum in ctrl.message.data">
         <md-card-header>
@@ -148,7 +148,7 @@
       </md-card>
       <!-- </div> -->
   </div>
-  <div ng-if="url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
+  <div ng-if="ctrl.selectedItem && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
     <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
       <md-card-header>
         <md-card-header-text>
@@ -163,7 +163,7 @@
         <ul>
           <li><strong>Dataset ID:</strong> {{ dataset.datasetId }}</li>
           <li><strong>Access:</strong> {{ dataset.info.accessType }}</li>
-          <li><strong>Dataset Url:</strong>
+          <li ng-if="dataset.externalUrl"><strong>Dataset Url:</strong>
             <a target="_blank" href="{{dataset.externalUrl}}">
               {{ dataset.externalUrl }}
               <i class="fas fa-external-link-alt"></i>
