@@ -34,6 +34,26 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGUN]+) \> ([ATCGUN]+)$/i;
 
 
+  var isDlgOpen = false;
+  $scope.beaconInfo = function(e) {
+    if ( isDlgOpen ) return;
+    isDlgOpen = true;
+
+    $mdDialog
+      .show($mdDialog
+        .alert()
+        .title('More info goes here.')
+        .textContent('Something witty.')
+        .ariaLabel('More info')
+        .ok('Got it')
+        .targetEvent(e)
+      )
+      .then(function() {
+        isDlgOpen = false;
+      });
+  };
+
+
   function makeUrl(searchtype, query) {
     if (searchtype == 'disease') {
       return $scope.baseUrl + $scope.urlDisease + query

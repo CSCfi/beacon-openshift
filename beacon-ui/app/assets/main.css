@@ -18,6 +18,11 @@
 	color: #888;
 }
 
+.top-bar {
+	display: flex;
+	margin: 5px;
+}
+
 md-card-content ul {
 	padding: 0;
 	margin: 0;

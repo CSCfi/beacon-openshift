@@ -1,5 +1,13 @@
-<div ng-if="!cookieLoggedIn" id="beaconLogin" class="col-md-2 ml-md-auto"><a href="https://beacon-auth-beacon.rahtiapp.fi/app">
-  <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/></a>
+<div ng-if="!cookieLoggedIn" id="beaconLogin" class="top-bar">
+  <!-- <a href="https://beacon-auth-beacon.rahtiapp.fi/app">
+    <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
+  </a> -->
+  <md-button ng-click="" class="md-raised md-warn" title="Authenticate via ELIXIR AAI">
+      ELIXIR LOGIN
+    </md-button>
+  <md-button ng-click="ViewCtrl.beaconInfo()" class="md-raised md-button" title="More info regarding the Beacon service">
+    <i class="fas fa-info-circle"></i>
+  </md-button>
 </div>
 <!-- <div ng-if="cookieLoggedIn" class="col-md-3 ml-md-auto">
   <span class="user-logged-in"><i class="fas fa-user" title="Bona Fide"></i> Riis Örtser</span>
