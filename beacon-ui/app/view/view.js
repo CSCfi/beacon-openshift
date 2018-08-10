@@ -47,41 +47,36 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   }
 
   that.querySearch = function(query){
-    // if (query && query.length >= 2) {
       return $http.get($scope.autocompleteUrl, {params: {q: query}})
-      // return $http.get(makeUrl($scope.search.type, query))
       .then(function(response){
         return response.data;
       })
     // }
   }
 
-
-
   // Simple GET request example:
   $scope.submit = function() {
+    that.message = 'loading';
     that.searchClick = true;
     if (that.regexp.test(that.searchText)) {
       that.selectedItem = {type: 'variant', name: that.searchText}
     }
-    if (that.selectedItem.type == 'disease') {
+    if (that.selectedItem && that.selectedItem.type == 'disease') {
       that.triggerCredentials = false;
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText;
       console.log($scope.url);
-    } else if (that.selectedItem.type == 'gene') {
+    } else if (that.selectedItem && that.selectedItem.type == 'gene') {
       that.triggerCredentials = false;
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
       console.log($scope.url);
-    } else if (that.selectedItem.type == 'variant') {
+    } else if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
-      // var qs = $scope.search.query.split(" ");
       var params = that.searchText.match(that.regexp)
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                    $scope.assembly.selected +
                    '&referenceName=' + params[1] + '&start=' + params[2]+
                    '&referenceBases=' + params[3] + '&alternateBases=' + params[4];
       console.log($scope.url);
-      // that.message = 'q';
     } else {
       console.log('search type unselected');
     }
@@ -90,19 +85,12 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
       method: 'GET',
       url: $scope.url,
       withCredentials: that.triggerCredentials
-      // params: {}
     }).then(function successCallback(response) {
-
         console.log(response);
         that.message = response;
-        //$scope.disease = response.data[0].disease;
-        // this callback will be called asynchronously
-        // when the response is available
       }, function errorCallback(response) {
         console.log("failure");
         $scope.err = 'Input is in incorrect format, or the API is offline.'
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
       });
   }
 
@@ -122,6 +110,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   }
 
   $scope.goToGene = function(gene) {
+    that.message = 'loading';
     that.selectedItem = {'type': 'gene', 'name': gene};
     that.searchText = gene;
     $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
@@ -133,21 +122,14 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
     }).then(function successCallback(response) {
         console.log(response);
         that.message = response;
-        //$scope.disease = response.data[0].disease;
-        // this callback will be called asynchronously
-        // when the response is available
       }, function errorCallback(response) {
         console.log("failure");
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
       });
   }
 
   $scope.findDatasets = function(chr, pos, ref, alt, assembly) {
-    // $scope.message = 'q';
+    that.message = 'loading';
     that.selectedItem = {type: 'variant', name: chr + ' : ' + pos + ' ' + ref + ' > ' + alt};
-    // $scope.assembly.selected = assembly;
-    // $scope.search.query =
 
     $http({
       method: 'GET',
@@ -158,14 +140,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
     }).then(function successCallback(response) {
         console.log(response);
         that.message = response;
-        //$scope.disease = response.data[0].disease;
-        // this callback will be called asynchronously
-        // when the response is available
       }, function errorCallback(response) {
         console.log("failure");
         $scope.err = 'Input is in incorrect format, or the API is offline.'
-        // called asynchronously if an error occurs
-        // or server returns response with an error status.
       });
   }
 

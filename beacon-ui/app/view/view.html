@@ -1,4 +1,4 @@
-<div ng-if="!cookieLoggedIn" class="col-md-2 ml-md-auto"><a href="https://beacon-auth-beacon.rahtiapp.fi/app">
+<div ng-if="!cookieLoggedIn" id="beaconLogin" class="col-md-2 ml-md-auto"><a href="https://beacon-auth-beacon.rahtiapp.fi/app">
   <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/></a>
 </div>
 <!-- <div ng-if="cookieLoggedIn" class="col-md-3 ml-md-auto">
@@ -79,7 +79,7 @@
     </div>
     <hr />
   </div>
-  <div ng-if="ctrl.searchClick && 'null' == ctrl.selectedItem">
+  <div ng-if="ctrl.searchClick && !ctrl.selectedItem">
     <span>Please select a Disease, Gene or input a Variant</span>
   </div>
   <div ng-if="url.includes('disease') && ctrl.message.status == 200" class="row result-row">
@@ -171,7 +171,9 @@
       <md-card-actions layout="column" layout-align="start">
       </md-card-actions>
     </md-card>
-    <!-- <div ng-if="message == 'q'" style="text-align:center;margin-top:50px;">{{err}}<br><i class="fas fa-circle-notch icon_animation"></i></div> -->
   </div>
-  <div style="text-align:center"><div ng-if="message.data.http">{{ctrl.message.data.msg}}</div></div>
+  <div ng-if="ctrl.message == 'loading'" layout="row" layout-sm="column" layout-align="space-around">
+    <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+  </div>
+  <div style="text-align:center"><div ng-if="ctrl.message.data.http">{{ctrl.message.data.msg}}</div></div>
 </div>

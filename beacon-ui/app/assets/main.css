@@ -59,18 +59,39 @@ md-card-content ul li {
     }
 }
 
+#beaconLogin img {
+	height: 55px;
+	width: auto;
+}
+
 .result-row {
 	width: 85%;
 	margin: 0 auto;
-	-webkit-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:center;
+	align-items:baseline;
 }
 
 .result-row .resultCard {
-	width:25%;
+	width:31%;
 	min-width: 250px;
+	margin: 8px 10px;
+	order: 1;
+	flex-grow: 1;
+}
 
+.result-row .resultCard span.md-title {
+	font-size: 1.1em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	min-width: 300px;
+}
+
+.result-row .resultCard md-card-header-text {
+	overflow: hidden;
 }
 
 .result-box {
