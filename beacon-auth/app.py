@@ -33,9 +33,7 @@ app = Flask(__name__)
 
 @app.route('/app')
 def homepage():
-    text = '<a href="%s">Authenticate with elixir</a>'
-    login_url = text % make_authorization_url()
-    login_page = app.make_response(redirect(login_url))
+    login_page = app.make_response(redirect(make_authorization_url()))
     return login_page
 
 
