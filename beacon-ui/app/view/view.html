@@ -153,7 +153,10 @@
       <md-card-header>
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}}</span>
-          <span class="md-subhead">Number of Datasets: {{datum.datasetAlleleResponses.length}}</span>
+          <span class="md-subhead">Number of Registred Datasets: {{datum.datasetAlleleResponses.length}}</span>
+          <span ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true} as filtered">
+          </span>
+          <span class="md-subhead">Number of Available Datasets: {{filtered.length}}</span>
         </md-card-header-text>
       </md-card-header>
       <md-card-content ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true}">

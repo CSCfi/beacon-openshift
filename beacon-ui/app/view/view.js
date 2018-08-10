@@ -47,11 +47,14 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   }
 
   that.querySearch = function(query){
+    if (query && that.searchText.length >= 2) {
       return $http.get($scope.autocompleteUrl, {params: {q: query}})
       .then(function(response){
         return response.data;
       })
-    // }
+    } else {
+      return {};
+    }
   }
 
   // Simple GET request example:
