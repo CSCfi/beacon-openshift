@@ -33,8 +33,7 @@ app = Flask(__name__)
 
 @app.route('/app')
 def homepage():
-    login_page = app.make_response(redirect(make_authorization_url()))
-    return login_page
+    return redirect(make_authorization_url())
 
 
 def make_authorization_url():
