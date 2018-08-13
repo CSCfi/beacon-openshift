@@ -6,6 +6,7 @@ from flask_cors import CORS
 import pymysql
 import logging
 import os
+import math
 
 
 logging.basicConfig(filename='api.log',
@@ -27,12 +28,32 @@ def hello():
     return "\nBeacon 2.0 API\n"
 
 
+def create_pagination(page, results_per_page, total_results):
+
+    pagination = {}
+
+    # FOR UI
+    pagination['page'] = page
+    pagination['total_results'] = total_results
+    pagination['total_pages'] = math.ceil(total_results / results_per_page)
+
+    # FOR MYSQL
+    pagination['limit'] = results_per_page
+    pagination['offset'] = (page - 1) * results_per_page
+
+    return pagination
+
+
 @app.route("/api")
 def api():
     """
     This function implements query string type search for the API
 
-    --explain how it works--
+    Example disease query:
+    /api?type=disease&query=Alzheimer
+
+    Example gene query:
+    /api?type=gene&query=APOE,GRCh38&page=1&resultsPerPage=20
     """
 
     query = {}
@@ -73,14 +94,33 @@ def api():
         if query['gene'] and any(a in query['assembly'] for a in assemblies):
             try:
                 cur = db_cursor()
-                cur.execute('SELECT chr, chrpos, ref, alt, assembly, accession, accession_ver '
+
+                # GET NUMBER OF RESULTS FOR PAGINATION
+                cur.execute('SELECT COUNT(*) AS total_results '
                             'FROM changes WHERE entrez=(SELECT entrez FROM genes WHERE gene=%s) '
                             'AND assembly=%s ORDER BY chrpos;', (query['gene'], query['assembly'],))
+
+                # CREATE PAGINATION GUIDE
+                pagination = create_pagination(page=int(request.args.get('page', 1)),
+                                            results_per_page=int(request.args.get('resultsPerPage', 20)),
+                                            total_results=cur.fetchall()[0]['total_results'])
+
+                # MAKE THE ACTUAL QUERY FOR RESULTS
+                cur.execute('SELECT chr, chrpos, ref, alt, assembly, accession, accession_ver '
+                            'FROM changes WHERE entrez=(SELECT entrez FROM genes WHERE gene=%s) '
+                            'AND assembly=%s ORDER BY chrpos LIMIT %s OFFSET %s;',
+                            (query['gene'], query['assembly'], pagination['limit'], pagination['offset'],))
                 results = cur.fetchall()
+
+                response = {'pagination': {'totalResults': pagination['total_results'],
+                                        'currentPage': pagination['page'],
+                                        'totalPages': pagination['total_pages']},
+                            'results': results}
+
                 if len(results) == 0:
                     return jsonify({'http': 404, 'msg': 'gene not found'})
                 else:
-                    return jsonify(results)
+                    return jsonify(response)
             except Exception as e:
                 logging.info('ERROR IN /api?gene=' + query['gene'] + '&assembly=' + query['assembly'] + 
                             ' :: ' + str(e))
