@@ -122,7 +122,7 @@
   </div>
   <div ng-if="ctrl.selectedItem && url.includes('gene') && ctrl.message.status == 200" class="row result-row">
     <!-- <div> -->
-      <md-card class="resultCard" ng-repeat="datum in ctrl.message.data">
+      <md-card class="resultCard" ng-repeat="datum in ctrl.message.data.results">
         <md-card-header>
           <md-card-header-text>
             <span class="md-title">{{datum.chr}} : {{datum.chrpos}} {{datum.ref}} > {{datum.alt}}</span>
