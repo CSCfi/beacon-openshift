@@ -53,7 +53,7 @@ def api():
     /api?type=disease&query=Alzheimer
 
     Example gene query:
-    /api?type=gene&query=APOE,GRCh38&page=1&resultsPerPage=20
+    /api?type=gene&query=APOE,GRCh38&page=1&resultsPerPage=30
     """
 
     query = {}
@@ -102,7 +102,7 @@ def api():
 
                 # CREATE PAGINATION GUIDE
                 pagination = create_pagination(page=int(request.args.get('page', 1)),
-                                            results_per_page=int(request.args.get('resultsPerPage', 20)),
+                                            results_per_page=int(request.args.get('resultsPerPage', 30)),
                                             total_results=cur.fetchall()[0]['total_results'])
 
                 # MAKE THE ACTUAL QUERY FOR RESULTS
