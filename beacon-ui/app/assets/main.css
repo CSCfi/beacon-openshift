@@ -28,7 +28,27 @@
 }
 
 .page-menu {
-	text-align: center;
+	/* text-align: center; */
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-space-between;
+	width: 97%;
+	margin-bottom: 10px;
+}
+.page-menu div:first-child {
+	width: 15%;
+}
+.page-menu div:last-child {
+	width: 18%;
+}
+.page-menu div {
+	flex-grow: 1;
+	width: 63%;
+}
+
+.page-menu div pagination {
+	margin:0 auto;
+	width: 50%;
 }
 
 .page-info {

@@ -66,8 +66,6 @@
       </form>
       </md-content>
       </div>
-      <!-- <i class="fas fa-bars"></i>
-      <i class="fas fa-th"></i> -->
       <div id="searchExample">Show example search:
         <a href="" ng-click="searchExample('disease')">Disease</a> /
         <a href="" ng-click="searchExample('gene')">Gene</a> /
@@ -115,25 +113,32 @@
     </md-card>
   </div>
   <div class="row result-row" ng-if="ctrl.selectedItem && url.includes('gene') && ctrl.message.status == 200">
-    <div class="page-menu">
+    <div class="page-menu" ng-init="">
+      <div>
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-th"></i>
+      </div>
       <div>
         <!-- <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="alt-pagination-sm" boundary-link-numbers="true"> -->
-          <pagination 
-            uib-pagination 
-            total-items="totalItems" 
-            ng-model="currentPage" 
-            ng-change="pageChanged()" 
-            class="alt-pagination-sm" 
-            items-per-page="itemsPerPage" 
-            max-size="maxSize" 
+          <pagination
+            uib-pagination
+            total-items="ctrl.message.data.pagination.totalResults"
+            ng-model="currentPage"
+            ng-change="pageChanged(currentPage)"
+            class="alt-pagination-sm"
+            items-per-page="itemsPerPage"
+            max-size="maxSize"
             boundary-link-numbers="true">
           </pagination>
         </ul>
       </div>
       <div>
-        View 
-        <select ng-model="viewby" ng-change="setItemsPerPage(viewby)"><option >10</option><option>30</option><option>50</option></select>
-         results at a time.
+        <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+          <option value="10" ng-selected="true">10</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+         <span>results at a time.</span>
       </div>
     </div>
     <!-- <nav aria-label="Pagination menu" class="page-menu">
@@ -144,7 +149,7 @@
         <li class="page-item" ng-class="{disabled: ctrl.message.data.pagination.currentPage ==  ctrl.message.data.pagination.totalPages}"><a class="page-link" ng-click="selectPage(ctrl.message.data.pagination.currentPage, 30, action='next', totalPages=ctrl.message.data.pagination.totalPages)">Next</a></li>
         <li class="page-item" ng-class="{disabled: ctrl.message.data.pagination.currentPage ==  ctrl.message.data.pagination.totalPages}"><a class="page-link" ng-click="selectPage(ctrl.message.data.pagination.totalPages, 30)">Last</a></li>
       </ul>
-      <ul class="pagination"  id="pagination-container">  
+      <ul class="pagination"  id="pagination-container">
         <li ng-repeat="page in generatePagination(ctrl.message.data.pagination)"
               class="page-item"
               ng-class="{active: ctrl.message.data.pagination.currentPage == page}">

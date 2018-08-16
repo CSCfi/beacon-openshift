@@ -61,43 +61,31 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.boo
 
   // Pagination settings
   $scope.maxSize = 5;
-  $scope.totalItems = 640;
   $scope.currentPage = 1;
-  $scope.viewby = 20;
+  $scope.viewby = 10;
   $scope.itemsPerPage = $scope.viewby;
-  
+
 
   $scope.setPage = function (pageNo) {
     $scope.currentPage = pageNo;
   };
 
-  $scope.pageChanged = function() {
-    $log.log('Page changed to: ' + $scope.currentPage);
+  $scope.pageChanged = function(page) {
+    $scope.currentPage = page;
+    console.log('Page changed to: ' + $scope.currentPage);
+    select($scope.currentPage, $scope.itemsPerPage);
   };
 
   $scope.setItemsPerPage = function(num) {
     $scope.itemsPerPage = num;
-    $scope.currentPage = 1; //reset to first page
+    $scope.pageChanged($scope.currentPage);
+    console.log($scope.itemsPerPage);
+    console.log('Page changed to: ' + $scope.currentPage);
   }
 
-
-
-
-  $scope.generatePagination = function(pagination_data) {
-    // Generate range for pages
-    var array = [];
-    for (var i = 1; i <= pagination_data['totalPages']; i++) {
-      array.push(i);
-    }
-    return array;
-  }
-
-  $scope.selectPage = function(page, resultsPerPage, action=false, totalPages=false) {
-    if (action == 'prev' && page > 1) {page--;}
-    if (action == 'next' && page < totalPages) {page++;}
-
-    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + 
-                 '&query=' + that.searchText + ',' + $scope.assembly.selected + 
+function select (page, resultsPerPage) {
+    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
+                 '&query=' + that.searchText + ',' + $scope.assembly.selected +
                  '&page=' + page + '&resultsPerPage=' + resultsPerPage;
 
     $http({
