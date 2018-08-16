@@ -20,6 +20,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   $scope.url = '';
   $scope.cookieLoggedIn = false;
   that.triggerCredentials = false;
+  that.userid = 'abc123@elixir-europe.org'
 
   $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi';
   $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
@@ -31,27 +32,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
   $scope.selectedItem = null;
 
-  that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGUN]+) \> ([ATCGUN]+)$/i;
+  that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
 
-
-  var isDlgOpen = false;
-  $scope.beaconInfo = function(e) {
-    if ( isDlgOpen ) return;
-    isDlgOpen = true;
-
-    $mdDialog
-      .show($mdDialog
-        .alert()
-        .title('More info goes here.')
-        .textContent('Something witty.')
-        .ariaLabel('More info')
-        .ok('Got it')
-        .targetEvent(e)
-      )
-      .then(function() {
-        isDlgOpen = false;
-      });
-  };
 
 
   function makeUrl(searchtype, query) {
@@ -112,8 +94,6 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
         console.log(response);
         that.message = response;
       }, function errorCallback(response) {
-        console.log("failure");
-        $scope.err = 'Input is in incorrect format, or the API is offline.'
       });
   }
 

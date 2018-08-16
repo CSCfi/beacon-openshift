@@ -18,10 +18,18 @@
 	color: #888;
 }
 
+.autocomplete-error {
+	text-align: center;
+}
+
+
 .top-bar {
-	display: flex;
+	float: right;
 	margin: 5px;
 }
+
+.dialogdemoBasicUsage #popupContainer {
+	position: relative; }
 
 md-card-content ul {
 	padding: 0;
