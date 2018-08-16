@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
+angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.bootstrap'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view', {
@@ -57,6 +57,57 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
     } else {
       return {};
     }
+  }
+
+  // Pagination settings
+  $scope.maxSize = 5;
+  $scope.totalItems = 640;
+  $scope.currentPage = 1;
+  $scope.viewby = 20;
+  $scope.itemsPerPage = $scope.viewby;
+  
+
+  $scope.setPage = function (pageNo) {
+    $scope.currentPage = pageNo;
+  };
+
+  $scope.pageChanged = function() {
+    $log.log('Page changed to: ' + $scope.currentPage);
+  };
+
+  $scope.setItemsPerPage = function(num) {
+    $scope.itemsPerPage = num;
+    $scope.currentPage = 1; //reset to first page
+  }
+
+
+
+
+  $scope.generatePagination = function(pagination_data) {
+    // Generate range for pages
+    var array = [];
+    for (var i = 1; i <= pagination_data['totalPages']; i++) {
+      array.push(i);
+    }
+    return array;
+  }
+
+  $scope.selectPage = function(page, resultsPerPage, action=false, totalPages=false) {
+    if (action == 'prev' && page > 1) {page--;}
+    if (action == 'next' && page < totalPages) {page++;}
+
+    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + 
+                 '&query=' + that.searchText + ',' + $scope.assembly.selected + 
+                 '&page=' + page + '&resultsPerPage=' + resultsPerPage;
+
+    $http({
+      method: 'GET',
+      url: $scope.url
+    }).then(function successCallback(response) {
+        console.log(response);
+        that.message = response;
+      }, function errorCallback(response) {
+      });
   }
 
   // Simple GET request example:
