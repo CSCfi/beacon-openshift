@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
+angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.bootstrap'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view', {
@@ -20,6 +20,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
   $scope.url = '';
   $scope.cookieLoggedIn = false;
   that.triggerCredentials = false;
+  that.userid = 'abc123@elixir-europe.org'
 
   $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi';
   $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
@@ -31,7 +32,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
   $scope.selectedItem = null;
 
-  that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGUN]+) \> ([ATCGUN]+)$/i;
+  that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+
 
 
   function makeUrl(searchtype, query) {
@@ -55,6 +57,45 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
     } else {
       return {};
     }
+  }
+
+  // Pagination settings
+  $scope.maxSize = 5;
+  $scope.currentPage = 1;
+  $scope.viewby = 10;
+  $scope.itemsPerPage = $scope.viewby;
+
+
+  $scope.setPage = function (pageNo) {
+    $scope.currentPage = pageNo;
+  };
+
+  $scope.pageChanged = function(page) {
+    $scope.currentPage = page;
+    console.log('Page changed to: ' + $scope.currentPage);
+    select($scope.currentPage, $scope.itemsPerPage);
+  };
+
+  $scope.setItemsPerPage = function(num) {
+    $scope.itemsPerPage = num;
+    $scope.pageChanged($scope.currentPage);
+    console.log($scope.itemsPerPage);
+    console.log('Page changed to: ' + $scope.currentPage);
+  }
+
+function select (page, resultsPerPage) {
+    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
+                 '&query=' + that.searchText + ',' + $scope.assembly.selected +
+                 '&page=' + page + '&resultsPerPage=' + resultsPerPage;
+
+    $http({
+      method: 'GET',
+      url: $scope.url
+    }).then(function successCallback(response) {
+        console.log(response);
+        that.message = response;
+      }, function errorCallback(response) {
+      });
   }
 
   // Simple GET request example:
@@ -92,8 +133,6 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages'])
         console.log(response);
         that.message = response;
       }, function errorCallback(response) {
-        console.log("failure");
-        $scope.err = 'Input is in incorrect format, or the API is offline.'
       });
   }
 

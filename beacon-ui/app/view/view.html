@@ -1,16 +1,11 @@
-<div ng-if="!cookieLoggedIn" id="beaconLogin" class="col-md-2 ml-md-auto"><a href="https://beacon-auth-beacon.rahtiapp.fi/app">
-  <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/></a>
+<div id="beaconLogin" class="top-bar" id="popupContainer">
+  <a href="https://beacon-auth-beacon.rahtiapp.fi/app">
+    <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
+  </a>
 </div>
-<!-- <div ng-if="cookieLoggedIn" class="col-md-3 ml-md-auto">
-  <span class="user-logged-in"><i class="fas fa-user" title="Bona Fide"></i> Riis Örtser</span>
-  <a href="" title="Destroy cookies">Log Out <i class="fas fa-sign-out-alt"></i></a>
-</div>
-<h1 style="display:none;">ELIXIR Beacon Network</h1> -->
 <div id="beaconLogo">
   <a href="https://beacon-ui-beacon.rahtiapp.fi"><img id="logo" src="assets/beacon-small-3.png" /></a>
 </div>
-
-<!--<div class="row row-backbordered"> BREAKS THE DOCUMENT-->
 <div class="col-sm-12" ng-controller="ViewCtrl as ctrl" ng-cloak>
   <div class="card search-card">
     <div class="card-body">
@@ -77,50 +72,95 @@
         <a href="" ng-click="searchExample('variant')">Variant</a>
       </div>
     </div>
-    <hr />
+    <hr/>
   </div>
-  <div ng-if="ctrl.searchClick && !ctrl.selectedItem">
-    <span>Please select a Disease, Gene or input a Variant</span>
+  <div class="autocomplete-error" ng-if="ctrl.searchClick && !ctrl.selectedItem">
+    <span>Please select a disease or gene from the dropdown menu, or search for a variant directly (see examples or <a href="#">format</a> at info page).</span>
   </div>
   <div ng-if="ctrl.selectedItem && url.includes('disease') && ctrl.message.status == 200" class="row result-row">
-    <!-- <div> -->
-      <md-card class="resultCard" ng-repeat="datum in ctrl.message.data">
-        <md-card-header>
-          <md-card-header-text>
-            <span class="md-title">{{ datum.genotype_name || "Genotype n/a" }}</span>
-            <span class="md-subhead">Disease</span>
-          </md-card-header-text>
-        </md-card-header>
-        <md-card-content>
-          <ul>
-            <li><strong>Phenotype:</strong> {{ datum.phenotype_name }}</li>
-            <li><strong>Gene:</strong> {{ datum.gene }}</li>
-            <li ng-if="datum.genotype_id.includes('ORPHA')">
-              <strong>More Info:</strong> {{ datum.genotype_id }}
-            </li>
-            <li ng-if="datum.genotype_id.includes('OMIM')">
-              <strong>More Info:</strong>
-              <a target="_blank" href="https://omim.org/entry/{{ datum.genotype_id.replace('OMIM:', '') }}">
-                {{ datum.genotype_id }}
-                <i class="fas fa-external-link-alt"></i>
-              </a>
-            </li>
-          </ul>
-          <hr/>
-        </md-card-content>
-        <md-card-actions layout="column" layout-align="start">
-          <md-button
-          ng-click="goToGene(datum.gene)"
-          type="submit" name="submit" id="submit" value="Browse Variants"
-          class="md-raised md-primary"
-          aria-label="Browse Variants">
-          Browse Variants</md-button>
-        </md-card-actions>
-      </md-card>
-
-    <!-- </div> -->
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data">
+      <md-card-header>
+        <md-card-header-text>
+          <span class="md-title">{{ datum.genotype_name || "Genotype n/a" }}</span>
+          <span class="md-subhead">Disease</span>
+        </md-card-header-text>
+      </md-card-header>
+      <md-card-content>
+        <ul>
+          <li><strong>Phenotype:</strong> {{ datum.phenotype_name }}</li>
+          <li><strong>Gene:</strong> {{ datum.gene }}</li>
+          <li ng-if="datum.genotype_id.includes('ORPHA')">
+            <strong>More Info:</strong> {{ datum.genotype_id }}
+          </li>
+          <li ng-if="datum.genotype_id.includes('OMIM')">
+            <strong>More Info:</strong>
+            <a target="_blank" href="https://omim.org/entry/{{ datum.genotype_id.replace('OMIM:', '') }}">
+              {{ datum.genotype_id }}
+              <i class="fas fa-external-link-alt"></i>
+            </a>
+          </li>
+        </ul>
+        <hr/>
+      </md-card-content>
+      <md-card-actions layout="column" layout-align="start">
+        <md-button
+        ng-click="goToGene(datum.gene)"
+        type="submit" name="submit" id="submit" value="Browse Variants"
+        class="md-raised md-primary"
+        aria-label="Browse Variants">
+        Browse Variants</md-button>
+      </md-card-actions>
+    </md-card>
+  </div>
+  <div class="row result-row" ng-if="ctrl.selectedItem && url.includes('gene') && ctrl.message.status == 200">
+    <div class="page-menu" ng-init="">
+      <div>
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-th"></i>
+      </div>
+      <div>
+        <!-- <ul uib-pagination total-items="totalItems" ng-model="currentPage" max-size="maxSize" class="alt-pagination-sm" boundary-link-numbers="true"> -->
+          <pagination
+            uib-pagination
+            total-items="ctrl.message.data.pagination.totalResults"
+            ng-model="currentPage"
+            ng-change="pageChanged(currentPage)"
+            class="alt-pagination-sm"
+            items-per-page="itemsPerPage"
+            max-size="maxSize"
+            boundary-link-numbers="true">
+          </pagination>
+        </ul>
+      </div>
+      <div>
+        <select ng-model="viewby" ng-change="setItemsPerPage(viewby)">
+          <option value="10" ng-selected="true">10</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+         <span>results at a time.</span>
+      </div>
+    </div>
+    <!-- <nav aria-label="Pagination menu" class="page-menu">
+      <ul class="pagination">
+        <li class="page-item" ng-class="{disabled: ctrl.message.data.pagination.currentPage ==  1}"><a class="page-link" ng-click="selectPage(1, 30)">First</a></li>
+        <li class="page-item" ng-class="{disabled: ctrl.message.data.pagination.currentPage ==  1}"><a class="page-link" ng-click="selectPage(ctrl.message.data.pagination.currentPage, 30, action='prev')">Previous</a></li>
+        <li class="page-item"><a class="page-link">{{ctrl.message.data.pagination.currentPage}} / {{ctrl.message.data.pagination.totalPages}}</a></li>
+        <li class="page-item" ng-class="{disabled: ctrl.message.data.pagination.currentPage ==  ctrl.message.data.pagination.totalPages}"><a class="page-link" ng-click="selectPage(ctrl.message.data.pagination.currentPage, 30, action='next', totalPages=ctrl.message.data.pagination.totalPages)">Next</a></li>
+        <li class="page-item" ng-class="{disabled: ctrl.message.data.pagination.currentPage ==  ctrl.message.data.pagination.totalPages}"><a class="page-link" ng-click="selectPage(ctrl.message.data.pagination.totalPages, 30)">Last</a></li>
+      </ul>
+      <ul class="pagination"  id="pagination-container">
+        <li ng-repeat="page in generatePagination(ctrl.message.data.pagination)"
+              class="page-item"
+              ng-class="{active: ctrl.message.data.pagination.currentPage == page}">
+          <a class="page-link" ng-click="selectPage(page, 30)" id="page-{{page}}">{{page}}</a>
+        </li>
+      </ul>
+    </nav> -->
+    <!-- <span class="page-info">Total results: {{ctrl.message.data.pagination.totalResults}}</span> -->
   </div>
   <div ng-if="ctrl.selectedItem && url.includes('gene') && ctrl.message.status == 200" class="row result-row">
+<<<<<<< HEAD
     <!-- <div> -->
       <md-card class="resultCard" ng-repeat="datum in ctrl.message.data.results">
         <md-card-header>
@@ -146,7 +186,32 @@
           Find Datasets</md-button>
         </md-card-actions>
       </md-card>
-      <!-- </div> -->
+=======
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data.results">
+      <md-card-header>
+        <md-card-header-text>
+          <span class="md-title">{{datum.chr}} : {{datum.chrpos}} {{datum.ref}} > {{datum.alt}}</span>
+          <span class="md-subhead">Variant affecting Gene: {{ctrl.selectedItem.name}}</span>
+        </md-card-header-text>
+      </md-card-header>
+      <md-card-content>
+        <ul>
+          <li><strong>Assembly:</strong> {{ datum.assembly }}</li>
+          <li><strong>Accession:</strong> {{ datum.accession }}</li>
+          <li><strong>Assembly Accession Version:</strong> {{ datum.accession_ver }}</li>
+        </ul>
+        <hr/>
+      </md-card-content>
+      <md-card-actions layout="column" layout-align="start">
+        <md-button
+        ng-click="findDatasets(datum.chr, datum.chrpos, datum.ref, datum.alt, datum.assembly)"
+        type="submit" name="submit" id="submit" value="Find Datasets"
+        class="md-raised md-primary"
+        aria-label="Find Datasets">
+        Find Datasets</md-button>
+      </md-card-actions>
+    </md-card>
+>>>>>>> 81d6b59... incomplete pagination
   </div>
   <div ng-if="ctrl.selectedItem && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
     <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
