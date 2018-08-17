@@ -87,7 +87,7 @@ def api():
             if len(results) == 0:
                 return jsonify({'http': 404, 'msg': 'disease not found'})
             else:
-                return jsonify(results)
+                return jsonify(response)
         except Exception as e:
             logging.info('ERROR IN /api?disease=' + query['disease'] + ' :: ' + str(e))
         finally:
