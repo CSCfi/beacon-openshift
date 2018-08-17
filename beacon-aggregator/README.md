@@ -9,6 +9,8 @@ This API is used to receive a Beacon variant call, which is then queued up in a 
 | `/q?` | Can be queried with various query parameters according to Beacon 1.0 specification. |
 
 ##### Example queries
+The variant format is enforced in the `beacon-ui` input field using regex `/^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i`. A valid query would then be inputted as `1 : 1000 A > C`.
+
 ```/q?assemblyId=GRCh37&referenceName=5&start=3000000&referenceBases=A&alternateBases=C```
 
 ```/q?assemblyId=GRCh38&referenceName=X&start=150000&referenceBases=TTG&alternateBases=GAC```
