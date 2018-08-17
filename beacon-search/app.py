@@ -55,31 +55,27 @@ def api():
     assemblies = ['GRCh37', 'GRCh38']  # Currently supported assemblies
 
     # Query for diseases
-    if request.args.get('type') == 'disease':
+    # Query string should be at least 3 characters long to limit results
+    if request.args.get('type') == 'disease' and len(request.args.get('query')) > 3:
         query['disease'] = request.args.get('query')
+        try:
+            cur = db_cursor()
+            cur.execute('SELECT disease AS phenotype_name, '
+                        'hpo_id AS phenotype_id, '
+                        'disease_id AS genotype_id, genotype AS genotype_name, '
+                        'gene '
+                        'FROM annotations WHERE disease LIKE %s;',
+                        ('%' + query['disease'] + '%',))
+            results = cur.fetchall()
 
-        # Query string should be at least 3 characters long to limit results
-        if len(query['disease']) > 3:
-            try:
-                cur = db_cursor()
-                cur.execute('SELECT disease AS phenotype_name, '
-                            'hpo_id AS phenotype_id, '
-                            'disease_id AS genotype_id, genotype AS genotype_name, '
-                            'gene '
-                            'FROM annotations WHERE disease LIKE %s;',
-                            ('%' + query['disease'] + '%',))
-                results = cur.fetchall()
-
-                if len(results) == 0:
-                    return jsonify({'http': 404, 'msg': 'disease not found'})
-                else:
-                    return jsonify(results)
-            except Exception as e:
-                logging.info('ERROR IN /api?disease=' + query['disease'] + ' :: ' + str(e))
-            finally:
-                cur.connection.close()
-        else:
-            return jsonify({'http': 400, 'msg': 'Disease name must be at least 4 characters long.'})
+            if len(results) == 0:
+                return jsonify({'http': 404, 'msg': 'disease not found'})
+            else:
+                return jsonify(results)
+        except Exception as e:
+            logging.info('ERROR IN /api?disease=' + query['disease'] + ' :: ' + str(e))
+        finally:
+            cur.connection.close()
 
     # Query for genes
     elif request.args.get('type') == 'gene':

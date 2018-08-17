@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCookies', 'ui.bootstrap'])
+angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.bootstrap'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view', {
