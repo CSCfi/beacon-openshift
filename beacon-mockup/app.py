@@ -4,13 +4,16 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+'''This is a simple mock-up service with no configurations.'''
 
+# Initialize web app
 app = Flask(__name__)
 CORS(app)
 
 
 @app.route("/api/true")
 def mock_true():
+    """Return truthy response."""
     return jsonify({'beaconId': 'Always True',
                     'apiVersion': '1.0.0',
                     'exists': True,
@@ -39,29 +42,30 @@ def mock_true():
                                                 'info': {'accessType': 'PUBLIC'},
                                                 'error': None},
                                                 {'datasetId': 'EGAD000000000012',
-                                                'exists': True,
-                                                'frequency': 0.00123,
-                                                'variantCount': 1,
-                                                'callCount': 15000,
-                                                'sampleCount': 8500,
-                                                'note': 'Mockup dataset 2',
-                                                'externalUrl': 'https://beacon-ui-beacon.rahtiapp.fi/',
-                                                'info': {'accessType': 'REGISTERED'},
-                                                'error': None},
+                                                 'exists': True,
+                                                 'frequency': 0.00123,
+                                                 'variantCount': 1,
+                                                 'callCount': 15000,
+                                                 'sampleCount': 8500,
+                                                 'note': 'Mockup dataset 2',
+                                                 'externalUrl': 'https://beacon-ui-beacon.rahtiapp.fi/',
+                                                 'info': {'accessType': 'REGISTERED'},
+                                                 'error': None},
                                                 {'datasetId': 'EGAD000000000013',
-                                                'exists': True,
-                                                'frequency': 0.00076,
-                                                'variantCount': 1,
-                                                'callCount': 1400,
-                                                'sampleCount': 500,
-                                                'note': 'Mockup dataset 3',
-                                                'externalUrl': 'https://beacon-ui-beacon.rahtiapp.fi/',
-                                                'info': {'accessType': 'PUBLIC'},
-                                                'error': None}]})
+                                                 'exists': True,
+                                                 'frequency': 0.00076,
+                                                 'variantCount': 1,
+                                                 'callCount': 1400,
+                                                 'sampleCount': 500,
+                                                 'note': 'Mockup dataset 3',
+                                                 'externalUrl': 'https://beacon-ui-beacon.rahtiapp.fi/',
+                                                 'info': {'accessType': 'PUBLIC'},
+                                                 'error': None}]})
 
 
 @app.route("/api/false")
 def mock_false():
+    """Return falsy response."""
     return jsonify({'beaconId': 'Always False',
                     'apiVersion': '1.0.0',
                     'exists': False,
@@ -93,6 +97,7 @@ def mock_false():
 
 @app.route("/api/null")
 def mock_null():
+    """Return null response."""
     return jsonify({'beaconId': 'Always Null',
                     'apiVersion': '1.0.0',
                     'exists': None,
@@ -123,4 +128,5 @@ def mock_null():
 
 
 if __name__ == "__main__":
+    """Start the web server."""
     app.run(host='0.0.0.0', port=8080)

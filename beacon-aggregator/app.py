@@ -14,46 +14,34 @@ logging.basicConfig(format=FORMAT, datefmt='%Y-%m-%d %H:%M:%S')
 LOG = logging.getLogger(__name__)
 LOG.setLevel(logging.INFO)
 
+# Collect API endpoints
 routes = web.RouteTableDef()
 
 
 @routes.get('/health')
 async def health_check(request):
-    """Answer age old question: is this API up."""
-    LOG.info('hello')
+    """Return HTTP 200."""
     return web.HTTPOk()
 
 
 def get_beacons():
-    """Read beacon URLs from a file and return them in a list"""
+    """Read beacon URLs from a file and return them in a list."""
+    # Look for a file containing beacon URLs line by line
+    # defaults to beacons.txt if no value is given in ENV
     beacon_list = os.environ.get('BEACON_LIST', 'beacons.txt')
     beacons = []
+
+    # Parse beacon URLs from file into a list for easy iteration
     with open(beacon_list, 'r') as f:
         beacons = [line.strip() for line in f]
-    return beacons  
+
+    return beacons
 
 
 @routes.get('/q')
 async def query_string_endpoint(request):
     """Stream the response from the query and package it nicely."""
-    
-    # A COMPLETE LIST OF PARAMETERS
-    '''
-    q = {'referenceName': request.rel_url.query['referenceName'],
-         'start': request.rel_url.query['start'],
-         'end': request.rel_url.query['end'],
-         'startMin': request.rel_url.query['startMin'],
-         'startMax': request.rel_url.query['startMax'],
-         'endMin': request.rel_url.query['endMin'],
-         'endMax': request.rel_url.query['endMax'],
-         'referenceBases': request.rel_url.query['referenceBases'],
-         'alternateBases': request.rel_url.query['alternateBases'],
-         'variantType': request.rel_url.query['variantType'],
-         'assemblyId': request.rel_url.query['assemblyId'],
-         'datasetIds': request.rel_url.query['datasetIds'],
-         'includeDatasetResponses': request.rel_url.query['includeDatasetResponses']}
-    '''
-
+    # Prepare response object
     resp = web.StreamResponse(status=200,
                               reason='OK',
                               headers={'Content-Type': 'application/json'})
@@ -62,12 +50,17 @@ async def query_string_endpoint(request):
     tasks = []  # requests to-be-done are appended here
     BEACONS = get_beacons()  # list of beacon urls
 
+    # Iterate over beacon URLs and queue requests to them
     for beacon in BEACONS:
         task = asyncio.ensure_future(query(beacon, q, request.cookies['access_token']))
         tasks.append(task)
         LOG.info(f'Queueing request to {beacon} with {q}')
     try:
+        # Initiate the stream response by opening a list
         await resp.write(b'[')
+
+        # Fetch responses from the queued requests, and print
+        # them into the streamed response as they complete
         for index, res in enumerate(asyncio.as_completed(tasks)):
             if index == len(tasks)-1:
                 await resp.write(json.dumps(await res).encode('utf-8'))
@@ -75,6 +68,8 @@ async def query_string_endpoint(request):
             else:
                 await resp.write(json.dumps(await res).encode('utf-8') + b',')
                 LOG.info(f'Processing requests {index+1}/{len(tasks)}')
+
+        # Finally close the stream response list and do sanitation
         await resp.write(b']')
         await resp.drain()
         await resp.write_eof()
@@ -86,27 +81,32 @@ async def query_string_endpoint(request):
 
 async def query(beacon, q, access_token):
     """Query the beacon endpoint."""
+    # Create a new session for querying a beacon
     async with aiohttp.ClientSession() as session:
         try:
+            # Send a GET request to beacon with authorized access token
             async with session.get(beacon,
                                    params=q,
                                    ssl=os.environ.get('HTTPS_ONLY', True),
                                    headers={'Authorization': 'Bearer '+access_token}) as response:
                 LOG.info(f'Made request to {beacon} with {q}')
+
+                # Return the response asynchronously when it arrives
                 return await response.json()
         except Exception as e:
             LOG.info(str(e))
 
 
 def main():
+    """Start the web server."""
     loop = asyncio.get_event_loop()
     server = web.Application(loop=loop)
     cors = aiohttp_cors.setup(server, defaults={
         "*": aiohttp_cors.ResourceOptions(
-                allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-            )
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+        )
     })
     server.router.add_routes(routes)
     for route in list(server.router.routes()):
