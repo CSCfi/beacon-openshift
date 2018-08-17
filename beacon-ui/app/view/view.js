@@ -74,9 +74,16 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   }
 
   function select (page, resultsPerPage) {
-  $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
-               '&query=' + that.searchText + ',' + $scope.assembly.selected +
-               '&page=' + page + '&resultsPerPage=' + resultsPerPage;
+  if(that.selectedItem.type == 'disease'){
+    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
+                 '&query=' + that.searchText +
+                 '&page=' + page + '&resultsPerPage=' + resultsPerPage;
+
+  } else {
+    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
+                 '&query=' + that.searchText + ',' + $scope.assembly.selected +
+                 '&page=' + page + '&resultsPerPage=' + resultsPerPage;
+  }
 
     $http({
       method: 'GET',
