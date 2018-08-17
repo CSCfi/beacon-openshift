@@ -1,7 +1,8 @@
-<div id="beaconLogin" class="top-bar" id="popupContainer">
-  <a href="https://beacon-auth-beacon.rahtiapp.fi/app">
+<div id="beaconLogin" id="popupContainer" >
+  <a href="https://beacon-auth-beacon.rahtiapp.fi/app" ng-if="!checkLogin()">
     <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
   </a>
+  <a ng-if="checkLogin()" href="#" class="btn btn-primary btn-lg disabled" tabindex="-1" role="button" aria-disabled="true">Logged in.</a>
 </div>
 <div id="beaconLogo">
   <a href="#"><img id="logo" src="assets/beacon-small-3.png" /></a>

@@ -10,49 +10,35 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 }])
 
 .controller('ViewCtrl', ['$scope', '$http', '$cookies', function($scope, $http, $cookies) {
-  console.log($cookies.getAll());
-  console.log($cookies.get('access_token'));
   var that = this;
   that.searchText = "";
   that.selectedItem = '';
   that.message = "";
   that.searchClick = false;
+
+  that.triggerCredentials = false;
+
   $scope.search = {type: 'disease', query: ''};
   $scope.assembly = {selected: 'GRCh38'};
   $scope.url = '';
-  $scope.cookieLoggedIn = false;
-  that.triggerCredentials = false;
-  that.userid = 'abc123@elixir-europe.org'
-
   $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi';
   $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
-  $scope.urlDisease = 'disease=';
-  $scope.urlGene = 'gene=';
-  $scope.urlAssembly = '&assembly=';
-
   $scope.aggregatorUrl = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?';
 
-  $scope.selectedItem = null;
-
   that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+
+  $scope.checkLogin = function() {
+    if($cookies.get('access_token')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   $scope.classRow = "resultCard";
   $scope.changeCardClass = function(display){
       $scope.classRow = display;
    };
-
-
-  function makeUrl(searchtype, query) {
-    if (searchtype == 'disease') {
-      return $scope.baseUrl + $scope.urlDisease + query
-    } else if (searchtype == 'gene') {
-      return $scope.baseUrl + $scope.urlGene + query
-    } else if (searchtype == 'variant') {
-      return $scope.aggregatorUrl + query
-    } else {
-      return 'Invalid Searchtype'
-    }
-  }
 
   that.querySearch = function(query){
     that.searchClick = false;
@@ -87,10 +73,10 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     $scope.pageChanged($scope.currentPage);
   }
 
-function select (page, resultsPerPage) {
-    $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
-                 '&query=' + that.searchText + ',' + $scope.assembly.selected +
-                 '&page=' + page + '&resultsPerPage=' + resultsPerPage;
+  function select (page, resultsPerPage) {
+  $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type +
+               '&query=' + that.searchText + ',' + $scope.assembly.selected +
+               '&page=' + page + '&resultsPerPage=' + resultsPerPage;
 
     $http({
       method: 'GET',
@@ -108,6 +94,7 @@ function select (page, resultsPerPage) {
     $scope.itemsPerPage = 10;
     if (that.regexp.test(that.searchText)) {
       that.selectedItem = {type: 'variant', name: that.searchText}
+
     }
     if (that.selectedItem && that.selectedItem.type == 'disease') {
       that.triggerCredentials = false;
@@ -137,6 +124,7 @@ function select (page, resultsPerPage) {
   }
 
   $scope.searchExample = function(searchtype) {
+    that.searchClick = false;
     if (searchtype == 'disease') {
       that.searchText = 'Alzheimer';
       document.querySelector('#autoCompleteId').focus();
