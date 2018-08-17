@@ -368,9 +368,10 @@ md-autocomplete#custom-template {
 
 #fixedInfo {
 	position: fixed;
-	right: 10px;
-	bottom: 10px;
+	left: 10px;
+	top: 10px;
 	width: 25%;
+	z-index: 1;
 }
 
 #fixedInfo h4 { font-size: 1.1em;}
