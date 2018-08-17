@@ -60,13 +60,29 @@ def api():
         query['disease'] = request.args.get('query')
         try:
             cur = db_cursor()
-            cur.execute('SELECT disease AS phenotype_name, '
-                        'hpo_id AS phenotype_id, '
-                        'disease_id AS genotype_id, genotype AS genotype_name, '
-                        'gene '
+
+            # Get number of results for pagination
+            cur.execute('SELECT COUNT(*) AS total_results '
                         'FROM annotations WHERE disease LIKE %s;',
                         ('%' + query['disease'] + '%',))
+
+            # Create guide for UI to operate pagination
+            pagination = create_pagination(page=int(request.args.get('page', 1)),
+                                           results_per_page=int(request.args.get('resultsPerPage', 30)),
+                                           total_results=cur.fetchall()[0]['total_results'])
+
+            # Finally make the actual query for diseases
+            cur.execute('SELECT disease AS phenotype_name, '
+                        'hpo_id AS phenotype_id, '
+                        'disease_id AS genotype_id, genotype AS genotype_name, gene '
+                        'FROM annotations WHERE disease LIKE %s;',
+                        ('%' + query['disease'] + '%', pagination['limit'], pagination['offset'],))
             results = cur.fetchall()
+
+            response = {'pagination': {'totalResults': pagination['total_results'],
+                                       'currentPage': pagination['page'],
+                                       'totalPages': pagination['total_pages']},
+                        'results': results}
 
             if len(results) == 0:
                 return jsonify({'http': 404, 'msg': 'disease not found'})
