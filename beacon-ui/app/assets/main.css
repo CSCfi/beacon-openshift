@@ -20,12 +20,14 @@
 
 .autocomplete-error {
 	text-align: center;
+	width: 90%;
+	margin: 0 auto;
 }
 
-.top-bar {
+/* .top-bar {
 	float: right;
 	margin: 5px;
-}
+} */
 
 .page-menu {
 	/* text-align: center; */
@@ -39,11 +41,12 @@
 	width: 15%;
 }
 .page-menu div:last-child {
-	width: 18%;
+	width: 15%;
+	font-size: 0.8em;
 }
 .page-menu div {
 	flex-grow: 1;
-	width: 63%;
+	width: 65%;
 }
 
 .page-menu div pagination {
@@ -137,6 +140,11 @@ md-card-content ul li {
     }
 }
 
+#beaconLogin {
+	position: absolute;
+	right: 10px;
+	top: 0;
+}
 
 #beaconLogin img {
 	height: 55px;
@@ -158,6 +166,24 @@ md-card-content ul li {
 	min-width: 250px;
 	margin: 8px 10px;
 	order: 1;
+	flex-grow: 1;
+	/* flex-direction: row; */
+}
+
+.result-row .resultCardRow {
+	width: 100%;
+	min-width: 250px;
+	margin: 8px 10px;
+	order: 1;
+	flex-direction: row;
+	flex-grow: 1;
+}
+
+#rowOrientation i {
+	cursor: pointer;
+}
+
+.result-row .cardItem {
 	flex-grow: 1;
 }
 
@@ -297,7 +323,7 @@ md-autocomplete#custom-template {
 }
 
 #beaconLogo {
-	margin:0 auto;
+	margin:10px auto;
 	width: 300px;
 }
 

@@ -34,6 +34,10 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.boo
 
   that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
 
+  $scope.classRow = "resultCard";
+  $scope.changeCardClass = function(display){
+      $scope.classRow = display;
+   };
 
 
   function makeUrl(searchtype, query) {
@@ -49,6 +53,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.boo
   }
 
   that.querySearch = function(query){
+    that.searchClick = false;
     if (query && that.searchText.length >= 2) {
       return $http.get($scope.autocompleteUrl, {params: {q: query}})
       .then(function(response){
@@ -72,15 +77,12 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.boo
 
   $scope.pageChanged = function(page) {
     $scope.currentPage = page;
-    console.log('Page changed to: ' + $scope.currentPage);
     select($scope.currentPage, $scope.itemsPerPage);
   };
 
   $scope.setItemsPerPage = function(num) {
     $scope.itemsPerPage = num;
     $scope.pageChanged($scope.currentPage);
-    console.log($scope.itemsPerPage);
-    console.log('Page changed to: ' + $scope.currentPage);
   }
 
 function select (page, resultsPerPage) {
@@ -92,7 +94,6 @@ function select (page, resultsPerPage) {
       method: 'GET',
       url: $scope.url
     }).then(function successCallback(response) {
-        console.log(response);
         that.message = response;
       }, function errorCallback(response) {
       });
@@ -102,17 +103,16 @@ function select (page, resultsPerPage) {
   $scope.submit = function() {
     that.message = 'loading';
     that.searchClick = true;
+    $scope.itemsPerPage = 10;
     if (that.regexp.test(that.searchText)) {
       that.selectedItem = {type: 'variant', name: that.searchText}
     }
     if (that.selectedItem && that.selectedItem.type == 'disease') {
       that.triggerCredentials = false;
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText;
-      console.log($scope.url);
     } else if (that.selectedItem && that.selectedItem.type == 'gene') {
       that.triggerCredentials = false;
       $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
-      console.log($scope.url);
     } else if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
       var params = that.searchText.match(that.regexp)
@@ -120,7 +120,6 @@ function select (page, resultsPerPage) {
                    $scope.assembly.selected +
                    '&referenceName=' + params[1] + '&start=' + params[2]+
                    '&referenceBases=' + params[3] + '&alternateBases=' + params[4];
-      console.log($scope.url);
     } else {
       console.log('search type unselected');
     }
@@ -130,7 +129,6 @@ function select (page, resultsPerPage) {
       url: $scope.url,
       withCredentials: that.triggerCredentials
     }).then(function successCallback(response) {
-        console.log(response);
         that.message = response;
       }, function errorCallback(response) {
       });
@@ -156,16 +154,13 @@ function select (page, resultsPerPage) {
     that.selectedItem = {'type': 'gene', 'name': gene};
     that.searchText = gene;
     $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
-    console.log($scope.url);
 
     $http({
       method: 'GET',
       url: $scope.url
     }).then(function successCallback(response) {
-        console.log(response);
         that.message = response;
       }, function errorCallback(response) {
-        console.log("failure");
       });
   }
 
@@ -180,11 +175,9 @@ function select (page, resultsPerPage) {
                         '&referenceName='+ chr + '&start=' + pos +
                         '&referenceBases=' + ref + '&alternateBases=' + alt
     }).then(function successCallback(response) {
-        console.log(response);
         that.message = response;
       }, function errorCallback(response) {
-        console.log("failure");
-        $scope.err = 'Input is in incorrect format, or the API is offline.'
+        $scope.err = 'API is offline.'
       });
   }
 
