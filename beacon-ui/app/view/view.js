@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.bootstrap'])
+angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCookies', 'ui.bootstrap'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view', {
@@ -9,7 +9,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ui.boo
   });
 }])
 
-.controller('ViewCtrl', ['$scope', '$http', function($scope, $http) {
+.controller('ViewCtrl', ['$scope', '$http', function($scope, $http, $cookies) {
+  console.log($cookies.get('access_token'));
   var that = this;
   that.searchText = "";
   that.selectedItem = '';
