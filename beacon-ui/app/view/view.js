@@ -21,9 +21,14 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   $scope.search = {type: 'disease', query: ''};
   $scope.assembly = {selected: 'GRCh38'};
   $scope.url = '';
-  $scope.baseUrl = 'https://beacon-search-beacon.rahtiapp.fi';
-  $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
-  $scope.aggregatorUrl = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?';
+  $scope.baseUrl = '';
+  $scope.aggregatorUrl = '';
+  $scope.autocompleteUrl = '';
+  $http.get('view/config.json').success(function (data){
+		$scope.baseUrl = data.baseUrl;
+    $scope.aggregatorUrl = data.aggregatorUrl;
+    $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
+	});
 
   $scope.alertType = true;
   $scope.closeAlert = function() {
