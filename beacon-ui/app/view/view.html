@@ -77,6 +77,9 @@
   </div>
   <div class="autocomplete-error alert alert-primary" ng-if="ctrl.searchClick && !ctrl.selectedItem">
     Please select a disease or gene from the autocomplete suggestions, or search for a variant directly (see examples search above).
+    <hr />
+    For variant search use the following search structure (including spaces):
+    <em>{Chromosome} : {Position} {ReferenceBases} > {AlternateBases}</em>
   </div>
   <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('disease') && ctrl.message.status == 200">
     <div class="row result-row">
