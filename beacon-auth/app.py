@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, abort, request, make_response, session, redirect
+from flask import Flask, abort, request, redirect
 from uuid import uuid4
 import os
 import logging
