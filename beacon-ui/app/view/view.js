@@ -25,6 +25,11 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
   $scope.aggregatorUrl = 'https://beacon-aggregator-beacon.rahtiapp.fi/q?';
 
+  $scope.alertType = true;
+  $scope.closeAlert = function() {
+     $scope.alertType = null;
+  };
+
   that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
 
   $scope.checkLogin = function() {
@@ -148,6 +153,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 
   $scope.goToGene = function(gene) {
     that.message = 'loading';
+    that.searchClick = false;
     that.selectedItem = {'type': 'gene', 'name': gene};
     that.searchText = gene;
     $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
@@ -162,6 +168,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   }
 
   $scope.findDatasets = function(chr, pos, ref, alt, assembly) {
+    that.searchClick = false;
     that.message = 'loading';
     that.selectedItem = {type: 'variant', name: chr + ' : ' + pos + ' ' + ref + ' > ' + alt};
 

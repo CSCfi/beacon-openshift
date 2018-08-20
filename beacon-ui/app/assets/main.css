@@ -370,9 +370,10 @@ md-autocomplete#custom-template {
 	position: fixed;
 	left: 10px;
 	top: 10px;
-	width: 25%;
+	width: 21%;
 	z-index: 1;
 }
 
 #fixedInfo h4 { font-size: 1.1em;}
 #fixedInfo p { font-size: 0.8em;}
+#fixedInfo button {margin-top: 5px;}
