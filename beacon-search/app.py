@@ -25,6 +25,13 @@ def hello():
     return "\nBeacon 2.0 API\n"
 
 
+def http_error(status, message):
+    """Return HTTP error status code and message."""
+    response = jsonify({'message': message})
+    response.status_code = status
+    return response
+
+
 def create_pagination(page, results_per_page, total_results):
     """Create pagination to filter results to manageable amounts."""
     pagination = {}
@@ -85,7 +92,7 @@ def api():
                         'results': results}
 
             if len(results) == 0:
-                return jsonify({'http': 404, 'msg': 'disease not found'})
+                return http_error(404, 'Disease not found')
             else:
                 return jsonify(response)
         except Exception as e:
@@ -129,7 +136,7 @@ def api():
                             'results': results}
 
                 if len(results) == 0:
-                    return jsonify({'http': 404, 'msg': 'gene not found'})
+                    return http_error(404, 'Gene not found')
                 else:
                     return jsonify(response)
             except Exception as e:
@@ -138,9 +145,9 @@ def api():
             finally:
                 cur.connection.close()
         else:
-            return jsonify({'http': 400, 'msg': 'Missing gene, or incorrect assembly.'})
+            return http_error(400, 'Missing gene or incorrect assembly')
     else:
-        return jsonify({'http': 400, 'msg': 'Invalid query string combinations.'})
+        return http_error(400, 'Invalid query parameters')
 
 
 @app.route("/autocomplete")
@@ -185,13 +192,13 @@ def autocomplete():
                 results = results + genes
 
             if len(results) == 0:
-                return jsonify({'http': 404, 'msg': 'keyword not found'})
+                return http_error(404, 'No matches with keyword')
             else:
                 return jsonify(results)
         except Exception as e:
             logging.info('ERROR IN /autocomplete :: ' + str(e))
     else:
-        return jsonify({'http': 400, 'msg': 'Missing parameter ?q='})
+        return http_error(400, 'Missing query parameter ?q=')
 
 
 def db_init():
