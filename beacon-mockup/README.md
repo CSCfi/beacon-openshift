@@ -30,7 +30,10 @@ python app.py
 
 Create container for `beacon-mockup`
 ```
-s2i build git@github.com:CSCfi/beacon-openshift.git --context-dir=beacon-mockup centos/python-35-centos7 beacon-mockup
+s2i build git@github.com:CSCfi/beacon-openshift.git \
+    --context-dir=beacon-mockup \
+    centos/python-35-centos7 \
+    beacon-mockup
 ```
 
 Run the created container:

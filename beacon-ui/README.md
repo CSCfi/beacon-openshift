@@ -31,7 +31,10 @@ python3 -m http.server 8080
 
 Create container for `beacon-ui`:
 ```
-s2i build git@github.com:CSCfi/beacon-openshift.git --context-dir=beacon-ui centos/httpd-24-centos7 beacon-ui
+s2i build git@github.com:CSCfi/beacon-openshift.git \
+    --context-dir=beacon-ui \
+    centos/httpd-24-centos7 \
+    beacon-ui
 ```
 
 Run the created container:

@@ -48,7 +48,10 @@ python app.py
 
 Create container for `beacon-search`
 ```
-s2i build git@github.com:CSCfi/beacon-openshift.git --context-dir=beacon-search centos/python-35-centos7 beacon-search
+s2i build git@github.com:CSCfi/beacon-openshift.git \
+    --context-dir=beacon-search \
+    centos/python-35-centos7 \
+    beacon-search
 ```
 
 Run the created container:
