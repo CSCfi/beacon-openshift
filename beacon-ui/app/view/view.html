@@ -110,7 +110,7 @@
       </div>
     </div>
     <div class="row result-row">
-      <md-card class="resultCard" ng-repeat="datum in ctrl.message.data.results" ng-class="cardRow">
+      <md-card ng-repeat="datum in ctrl.message.data.results" ng-class="classRow">
         <md-card-header class="cardItem">
           <md-card-header-text>
             <span class="md-title">{{ datum.genotype_name || "Genotype n/a" }}</span>
@@ -181,7 +181,7 @@
             <md-card-header-text>
               <span class="md-title">{{datum.chr}} : {{datum.chrpos}} {{datum.ref}} > {{datum.alt}}</span>
               <span class="md-subhead">Variant affecting Gene: {{ctrl.selectedItem.name}}</span>
-            </md-card-header-text>
+          </md-card-header-text>
           </md-card-header>
           <md-card-content class="cardItem">
             <ul>
@@ -203,7 +203,7 @@
     </div>
   </div>
   <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
-    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}" ng-class="cardRow">
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
       <md-card-header class="cardItem">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}}</span>
