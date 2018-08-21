@@ -1,0 +1,231 @@
+swagger: "2.0"
+info:
+  description: "This page gives an overview to the Beacon disease-gene-variant discovery services."
+  version: "1.0"
+  title: "Beacon Improved Search APIs"
+tags:
+- name: "beacon-search"
+  description: "Disease-Gene-Variant discovery service."
+- name: "beacon-aggregator"
+  description: "Beacon variant call aggregator."
+schemes:
+- "https"
+paths:
+  /:
+    get:
+      tags:
+      - "beacon-search"
+      summary: "Greets user with the name of the service."
+      description: "Can be used as an API health check."
+      responses:
+        200:
+          description: "Beacon 2.0 API"
+  /api:
+    get:
+      tags:
+      - "beacon-search"
+      summary: "Search for disease or gene."
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "type"
+        in: "query"
+        required: true
+        description: "Specify scope of query."
+        type: "string"
+        enum:
+        - "disease"
+        - "gene"
+      - name: "query"
+        in: "query"
+        required: true
+        description: "Query with disease name or gene+assembly combination."
+        type: "string"
+        enum:
+        - "Example query strings:"
+        - "Alzheimer"
+        - "APOE,GRCh38"
+      - name: "page"
+        in: "query"
+        description: "Page number for pagination."
+        type: "integer"
+        default: 1
+      - name: "resultsPerPage"
+        in: "query"
+        description: "Results per page for pagination."
+        type: "integer"
+        default: 30
+      responses:
+        200:
+          description: "Succesful operation."
+          schema:
+            type: "object"
+            properties:
+              pagination:
+                properties:
+                  currentPage:
+                    type: "integer"
+                  totalPages:
+                    type: "integer"
+                  totalResults:
+                    type: "integer"
+              results:
+                items:
+                  oneOf:
+                    - $ref: "#/definitions/gene"
+                    - $ref: "#/definitions/disease"
+        400:
+          description: "Bad request."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+        404:
+          description: "Not found."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+  /autocomplete:
+    get:
+      tags:
+      - "beacon-search"
+      summary: "Look up suggestions for diseases and genes with a keyword."
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "q"
+        in: "query"
+        required: true
+        description: "Keyword (disease or gene name)."
+        type: "string"
+      responses:
+        200:
+          description: "Succesful operation."
+          schema:
+            items:
+              oneOf:
+                - $ref: "#/definitions/autocomplete_gene"
+                - $ref: "#/definitions/autocomplete_disease"
+        400:
+          description: "Missing query parameters ?q=."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+        404:
+          description: "No matches with keyword."
+          schema:
+            type: "object"
+            properties:
+              message:
+                type: "string"
+  /health:
+    get:
+      tags:
+      - "beacon-aggregator"
+      summary: "Health check."
+      responses:
+        200:
+          description: "200: OK"
+  /q:
+    get:
+      tags:
+      - "beacon-aggregator"
+      summary: "Beacon variant call endpoint."
+      description: "This endpoint calls all known 1.0 Beacons with given parameters and returns the response asynchronously as a JSON stream. The required parameters below are for the Beacon UI, the aggregator can however accomodate all kinds of beacon queries if used from the command line. For full list of query parameters and responses, please refer to Beacon 1.0 specification (https://github.com/ga4gh-beacon/specification/blob/master/beacon.md)."
+      produces:
+      - "application/json"
+      parameters:
+      - name: "assemblyId"
+        in: "query"
+        required: true
+        description: "Reference genome."
+        type: "string"
+        enum:
+        - "GRCh38"
+        - "GRCh37"
+      - name: "referenceName"
+        in: "query"
+        required: true
+        description: "Chromosome 1-22, X, Y."
+        type: "string"
+      - name: "start"
+        in: "query"
+        required: true
+        description: "Genomic coordinate in chromosome (referenceName)."
+        type: "integer"
+      - name: "referenceBases"
+        in: "query"
+        required: true
+        description: "Reference nucleotide (in assemblyId)."
+        type: "string"
+      - name: "alternateBases"
+        in: "query"
+        required: true
+        description: "Alternate nucleotides (item of interest in datasets)."
+        type: "string"
+      - name: "access_token"
+        in: "header"
+        required: true
+        type: "string"
+        description: "Bearer token. Received from ELIXIR AAI."
+      responses:
+        200:
+          description: "Succesful operation."
+definitions:
+  gene:
+    type: "object"
+    properties:
+      accession:
+        type: "string"
+      accession_ver:
+        type: "string"
+      alt:
+        type: "string"
+      assembly:
+        type: "string"
+      chr:
+        type: "string"
+      chrpos:
+        type: "string"
+      ref:
+        type: "string"
+  disease:
+    type: "object"
+    properties:
+      gene:
+        type: "string"
+      genotype_id:
+        type: "string"
+      genotype_name:
+        type: "string"
+      phenotype_id:
+        type: "string"
+      phenotype_name:
+        type: "string"
+  autocomplete_disease:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      relatedGenes:
+        type: "integer"
+      type:
+        type: "string"
+      variations:
+        type: "integer"
+  autocomplete_gene:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      type:
+        type: "string"
+      variations:
+        type: "integer"
