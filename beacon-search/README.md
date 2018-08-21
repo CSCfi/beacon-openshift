@@ -20,15 +20,22 @@ This is a prototype suggestion API that can be used to find relevant disease-gen
 
 Response for `/api?type=disease&query=<disease>`:
 ```
-[
-  {
-    "gene": string,
-    "genotype_id": string,
-    "genotype_name": string,
-    "phenotype_id": string,
-    "phenotype_name": string
-  }
-]
+{
+  "pagination": {
+    "currentPage": int,
+    "totalPages": int,
+    "totalResults": int
+  },
+  "results": [
+    {
+      "gene": string,
+      "genotype_id": string,
+      "genotype_name": string,
+      "phenotype_id": string,
+      "phenotype_name": string
+    }
+  ]
+}
 ```
 
 Response for `/api?type=gene&query=<gene>,<assembly>`:
