@@ -182,7 +182,7 @@
           <md-card-header class="cardItem">
             <md-card-header-text>
               <span class="md-title">{{datum.chr}} : {{datum.chrpos}} {{datum.ref}} > {{datum.alt}}</span>
-              <span class="md-subhead">Variant affecting Gene: {{ctrl.selectedItem.name}}</span>
+              <span class="md-subhead">Variant affecting gene: {{ctrl.selectedItem.name}}</span>
           </md-card-header-text>
           </md-card-header>
           <md-card-content class="cardItem">
@@ -212,10 +212,10 @@
       <md-card-header class="cardItem">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}}</span>
-          <span class="md-subhead">Number of Registred Datasets: {{datum.datasetAlleleResponses.length}}</span>
+          <span class="md-subhead">Number of registered datasets: {{datum.datasetAlleleResponses.length}}</span>
           <span ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true} as filtered">
           </span>
-          <span class="md-subhead">Number of Available Datasets: {{filtered.length}}</span>
+          <span class="md-subhead">Number of available datasets: {{filtered.length}}</span>
         </md-card-header-text>
       </md-card-header>
       <md-card-content ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true}"  class="cardItem">
