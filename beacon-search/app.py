@@ -83,11 +83,11 @@ def api():
                                                total_results=total_results)
 
                 # Finally make the actual query for diseases
-                tmpcur= cur.execute('SELECT disease AS phenotype_name, '
-                                    'hpo_id AS phenotype_id, '
-                                    'disease_id AS genotype_id, genotype AS genotype_name, gene '
-                                    'FROM annotations WHERE disease LIKE %s LIMIT %s OFFSET %s;',
-                                    ('%' + query['disease'] + '%', pagination['limit'], pagination['offset'],))
+                cur.execute('SELECT disease AS phenotype_name, '
+                            'hpo_id AS phenotype_id, '
+                            'disease_id AS genotype_id, genotype AS genotype_name, gene '
+                            'FROM annotations WHERE disease LIKE %s LIMIT %s OFFSET %s;',
+                            ('%' + query['disease'] + '%', pagination['limit'], pagination['offset'],))
 
                 results = cur.fetchall()
 
