@@ -67,34 +67,39 @@ def api():
         query['disease'] = request.args.get('query')
         try:
             cur = db_cursor()
+            results = ''
 
             # Get number of results for pagination
             cur.execute('SELECT COUNT(*) AS total_results '
                         'FROM annotations WHERE disease LIKE %s;',
                         ('%' + query['disease'] + '%',))
+            total_results = cur.fetchall()[0]['total_results']
 
-            # Create guide for UI to operate pagination
-            pagination = create_pagination(page=int(request.args.get('page', 1)),
-                                           results_per_page=int(request.args.get('resultsPerPage', 20)),
-                                           total_results=cur.fetchall()[0]['total_results'])
+            if total_results > 0:
 
-            # Finally make the actual query for diseases
-            cur.execute('SELECT disease AS phenotype_name, '
-                        'hpo_id AS phenotype_id, '
-                        'disease_id AS genotype_id, genotype AS genotype_name, gene '
-                        'FROM annotations WHERE disease LIKE %s LIMIT %s OFFSET %s;',
-                        ('%' + query['disease'] + '%', pagination['limit'], pagination['offset'],))
-            results = cur.fetchall()
+                # Create guide for UI to operate pagination
+                pagination = create_pagination(page=int(request.args.get('page', 1)),
+                                               results_per_page=int(request.args.get('resultsPerPage', 30)),
+                                               total_results=total_results)
 
-            response = {'pagination': {'totalResults': pagination['total_results'],
-                                       'currentPage': pagination['page'],
-                                       'totalPages': pagination['total_pages']},
-                        'results': results}
+                # Finally make the actual query for diseases
+                tmpcur= cur.execute('SELECT disease AS phenotype_name, '
+                                    'hpo_id AS phenotype_id, '
+                                    'disease_id AS genotype_id, genotype AS genotype_name, gene '
+                                    'FROM annotations WHERE disease LIKE %s LIMIT %s OFFSET %s;',
+                                    ('%' + query['disease'] + '%', pagination['limit'], pagination['offset'],))
 
-            if len(results) == 0:
-                return http_error(404, 'Disease not found')
-            else:
+                results = cur.fetchall()
+
+                response = {'pagination': {'totalResults': pagination['total_results'],
+                                           'currentPage': pagination['page'],
+                                           'totalPages': pagination['total_pages']},
+                            'results': results}
+
                 return jsonify(response)
+            else:
+                return http_error(404, 'Disease not found')
+
         except Exception as e:
             logging.info('ERROR IN /api?disease=' + query['disease'] + ' :: ' + str(e))
         finally:
@@ -111,34 +116,38 @@ def api():
         if query['gene'] and any(a in query['assembly'] for a in assemblies):
             try:
                 cur = db_cursor()
+                results = ''
 
                 # Get number of results for pagination
                 cur.execute('SELECT COUNT(*) AS total_results '
                             'FROM changes WHERE entrez=(SELECT entrez FROM genes WHERE gene=%s) '
                             'AND assembly=%s ORDER BY chrpos;', (query['gene'], query['assembly'],))
+                total_results = cur.fetchall()[0]['total_results']
 
-                # Create guide for UI to operate pagination
-                pagination = create_pagination(page=int(request.args.get('page', 1)),
-                                               results_per_page=int(request.args.get('resultsPerPage', 30)),
-                                               total_results=cur.fetchall()[0]['total_results'])
+                if total_results > 0:
 
-                # Finally make the actual query for genes
-                cur.execute('SELECT chr, chrpos, ref, alt, assembly, accession, accession_ver '
-                            'FROM changes WHERE entrez=(SELECT entrez FROM genes WHERE gene=%s) '
-                            'AND assembly=%s ORDER BY chrpos LIMIT %s OFFSET %s;',
-                            (query['gene'], query['assembly'], pagination['limit'], pagination['offset'],))
-                results = cur.fetchall()
+                    # Create guide for UI to operate pagination
+                    pagination = create_pagination(page=int(request.args.get('page', 1)),
+                                                   results_per_page=int(request.args.get('resultsPerPage', 30)),
+                                                   total_results=total_results)
 
-                # Combine pagination settings with the query results
-                response = {'pagination': {'totalResults': pagination['total_results'],
-                                           'currentPage': pagination['page'],
-                                           'totalPages': pagination['total_pages']},
-                            'results': results}
+                    # Finally make the actual query for genes
+                    cur.execute('SELECT chr, chrpos, ref, alt, assembly, accession, accession_ver '
+                                'FROM changes WHERE entrez=(SELECT entrez FROM genes WHERE gene=%s) '
+                                'AND assembly=%s ORDER BY chrpos LIMIT %s OFFSET %s;',
+                                (query['gene'], query['assembly'], pagination['limit'], pagination['offset'],))
+                    results = cur.fetchall()
 
-                if len(results) == 0:
-                    return http_error(404, 'Gene not found')
-                else:
+                    # Combine pagination settings with the query results
+                    response = {'pagination': {'totalResults': pagination['total_results'],
+                                               'currentPage': pagination['page'],
+                                               'totalPages': pagination['total_pages']},
+                                'results': results}
+
                     return jsonify(response)
+                else:
+                    return http_error(404, 'Gene not found')
+
             except Exception as e:
                 logging.info('ERROR IN /api?gene=' + query['gene'] + '&assembly=' + query['assembly'] +
                              ' :: ' + str(e))
@@ -207,7 +216,7 @@ def db_init():
         db = pymysql.connect(host=os.environ.get('DB_HOST', 'localhost'),
                              user=os.environ.get('DB_USER', 'root'),
                              passwd=os.environ.get('DB_PASS', 'root'),
-                             db=os.environ.get('DB_NAME', 'hpo'))
+                             db=os.environ.get('DB_NAME', 'hpo_2018_05'))
         return db
     except Exception as e:
         logging.info('ERROR IN db_init() :: ' + str(e))
