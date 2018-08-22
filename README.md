@@ -50,6 +50,16 @@ docker run -p 8080:8080 beacon-mockup
 
 Similar steps can be followed for `beacon-aggregator` (requires `centos/python-36-centos7` base image), `beacon-search`, `beacon-auth` and `beacon-ui` (requires `centos/httpd-24-centos7`).
 
+### Running Tests
+You can run tests manually with
+```
+pytest
+```
+
+Or run automatically (builds test environment, runs tests, checks flake8).
+```
+tox
+```
 
 ### Related Information
 
