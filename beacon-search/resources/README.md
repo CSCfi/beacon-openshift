@@ -39,7 +39,7 @@ In another terminal run the workflow.
 cd resources
 luigi --module BeaconUpdater CreateDatabaseDump --config config.ini
 ```
-
+**NOTICE:** This workflow may take 4-6 hours to complete and generates a database with more than a million rows (~70 MB .sql).
 #### Workflow Tasks
 The workflow consists of several tasks that it must completed. Tasks are processed in order, and the system checks for completed tasks before moving onto next tasks. The process can be followed from the terminal you run the `luigi` command from, or from the luigi GUI that is served at `localhost:8082`.
 
