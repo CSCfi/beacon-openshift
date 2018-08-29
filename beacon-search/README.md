@@ -1,6 +1,6 @@
 ## Beacon Search
 
-This is a prototype suggestion API that can be used to find relevant disease-gene-variant relations. The database behind this API has been aggregated with data extracted from [HPO](https://hpo.jax.org/app/), [NCBI ClinVar](https://www.ncbi.nlm.nih.gov/clinvar/) and [OMIM](https://omim.org/), all data used in this prototype suggestion API can be found from the providers' respective documentation pages. The database creation scripts will be released at a later date.
+This is a prototype suggestion API that can be used to find relevant disease-gene-variant relations. The database behind this API has been aggregated with data extracted from [HPO](https://hpo.jax.org/app/), [NCBI ClinVar](https://www.ncbi.nlm.nih.gov/clinvar/) and [OMIM](https://omim.org/), all data used in this prototype suggestion API can be found from the providers' respective documentation pages. The [resources](resources) directory contains an automated luigi workflow which creates a database dump file for the Beacon Search API.
 
 ### Endpoints
 | Endpoint | Description |
@@ -90,7 +90,7 @@ The API requires some configuration variables stored as environment variables in
 | `DB_HOST` | `localhost` | Database hostname. |
 | `DB_USER` | `root` | Database username with sufficient permissions. |
 | `DB_PASS` | `root` | Password for `DB_USER`. |
-| `DB_NAME` | `hpo` | Database name that contains relevant tables. |
+| `DB_NAME` | `hpo` | Database name that contains relevant tables. Database can be created with the automated workflow in [resources](resources). |
 
 
 ### Run and Build
