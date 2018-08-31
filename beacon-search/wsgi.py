@@ -15,8 +15,8 @@ logging.basicConfig(filename='api.log',
                     level=logging.INFO)
 
 # Initialize web app
-app = Flask(__name__)
-CORS(app)
+application = Flask(__name__)
+CORS(application)
 
 
 @app.route("/")
@@ -232,9 +232,9 @@ def db_cursor():
 
 def main():
     """Start the web server."""
-    app.run(host=os.environ.get('APP_HOST', 'localhost'),
-            port=os.environ.get('APP_PORT', 8080),
-            debug=os.environ.get('APP_DEBUG', False))
+    application.run(host=os.environ.get('APP_HOST', 'localhost'),
+                    port=os.environ.get('APP_PORT', 8080),
+                    debug=os.environ.get('APP_DEBUG', False))
 
 
 if __name__ == '__main__':
