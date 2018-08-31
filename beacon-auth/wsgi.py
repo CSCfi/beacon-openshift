@@ -31,10 +31,10 @@ def base_headers():
 
 
 # Initialize web app
-app = Flask(__name__)
+application = Flask(__name__)
 
 
-@app.route('/app')
+@application.route('/app')
 def homepage():
     """Redirect to ELIXIR AAI upon loading endpoint."""
     return redirect(make_authorization_url())
@@ -67,7 +67,7 @@ def is_valid_state(state):
     return True
 
 
-@app.route('/')
+@application.route('/')
 def elixir_callback():
     """Receive callback from ELIXIR AAI, create cookies and redirect to Beacon UI."""
     # Handle errors from ELIXIR AAI
@@ -89,7 +89,7 @@ def elixir_callback():
 
     try:
         # Create a redirection to Beacon UI with access token stored in cookies
-        response = app.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
+        response = application.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
         response.set_cookie('access_token',
                             access_token,
                             max_age=int(os.environ.get('COOKIE_AGE', 3600)),
@@ -130,11 +130,11 @@ def get_userdetails(access_token):
 
 def main():
     """Start the web server."""
-    app.secret_key = os.environ.get('COOKIE_SECRET', None)
-    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
-    app.run(host=os.environ.get('APP_HOST', 'localhost'),
-            port=os.environ.get('APP_PORT', 8080),
-            debug=os.environ.get('APP_DEBUG', True))
+    application.secret_key = os.environ.get('COOKIE_SECRET', None)
+    application.config['SESSION_COOKIE_SECURE'] = os.environ.get('SESSION_COOKIE_SECURE', True)
+    application.run(host=os.environ.get('APP_HOST', 'localhost'),
+                    port=os.environ.get('APP_PORT', 8080),
+                    debug=os.environ.get('APP_DEBUG', True))
 
 
 if __name__ == '__main__':
