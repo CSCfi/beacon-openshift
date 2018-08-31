@@ -91,6 +91,8 @@ The API requires some configuration variables stored as environment variables in
 | `DB_USER` | `root` | Database username with sufficient permissions. |
 | `DB_PASS` | `root` | Password for `DB_USER`. |
 | `DB_NAME` | `hpo` | Database name that contains relevant tables. Database can be created with the automated workflow in [resources](resources). |
+| `GUNICORN_PROCESSES` | `3` | Number of workers. A good starting value is `2 * CPUs + 1`. So for machine with 1 CPU the value would be 3. |
+| `GUNICORN_THREADS` | `1` | Number of threads each worker can handle. |
 
 
 ### Run and Build

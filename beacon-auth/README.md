@@ -30,6 +30,8 @@ The API requires some configuration variables stored as environment variables. I
 | `CALLBACK_URL` | `None` | ELIXIR AAI Callback to `beacon-auth` `/`. |
 | `CLIENT_ID` | `None` | Client service identifier. Acquired from ELIXIR AAI. |
 | `CLIENT_SECRET` | `None` | Secret key for client service identifier. Acquired from ELIXIR AAI. |
+| `GUNICORN_PROCESSES` | `3` | Number of workers. A good starting value is `2 * CPUs + 1`. So for machine with 1 CPU the value would be 3. |
+| `GUNICORN_THREADS` | `1` | Number of threads each worker can handle. |
 
 ### Run and Build
 
