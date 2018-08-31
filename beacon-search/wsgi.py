@@ -19,7 +19,7 @@ application = Flask(__name__)
 CORS(application)
 
 
-@app.route("/")
+@application.route("/")
 def hello():
     """Greet user with service name."""
     return "\nBeacon 2.0 API\n"
@@ -48,7 +48,7 @@ def create_pagination(page, results_per_page, total_results):
     return pagination
 
 
-@app.route("/api")
+@application.route("/api")
 def api():
     """Serve multipurpose API endpoint.
 
@@ -159,7 +159,7 @@ def api():
         return http_error(400, 'Invalid query parameters')
 
 
-@app.route("/autocomplete")
+@application.route("/autocomplete")
 def autocomplete():
     """Suggest matching results for input keywords."""
     # Initialize autocomplete variables
