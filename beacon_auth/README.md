@@ -49,12 +49,12 @@ python app.py
 Create container for `beacon-auth`
 ```
 s2i build git@github.com:CSCfi/beacon-openshift.git \
-    --context-dir=beacon-auth \
+    --context-dir=beacon_auth \
     centos/python-35-centos7 \
-    beacon-auth
+    beacon_auth
 ```
 
 Run the created container:
 ```
-docker run -p 8080:8080 beacon-auth
+docker run -p 8080:8080 beacon_auth
 ```
