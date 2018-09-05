@@ -77,10 +77,12 @@ def process_element(event, elem, genes, keys, triggers, db):
         if triggers['vcf'] in elem.attrib:
 
             # write variables to dictionary
-            results = {}
-            for row in elem.attrib.items():
-                if row[0] in keys:
-                    results[row[0]] = row[1]
+            # results = {}
+            # for row in elem.attrib.items():
+            #     if row[0] in keys:
+            #         results[row[0]] = row[1]
+            # TO DO check if this is ok
+            results = {row[0]: row[1] for row in elem.attrib.items() if row[0] in keys}
             insert_to_db(db, inelem[1][0], results)
 
     return

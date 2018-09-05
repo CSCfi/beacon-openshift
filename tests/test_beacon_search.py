@@ -2,7 +2,7 @@ import unittest
 
 from unittest import mock
 
-from beacon_search.app import create_pagination, app
+from beacon_search.wsgi import create_pagination, application
 
 
 class TestSearchAPI(unittest.TestCase):
@@ -10,10 +10,10 @@ class TestSearchAPI(unittest.TestCase):
 
     def setUp(self):
         """Execute this method on start."""
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['DEBUG'] = False
-        self.app = app.test_client()
+        application.config['TESTING'] = True
+        application.config['WTF_CSRF_ENABLED'] = False
+        application.config['DEBUG'] = False
+        self.app = application.test_client()
 
     def tearDown(self):
         """Execute this method after each test."""
@@ -46,7 +46,7 @@ class TestSearchAPI(unittest.TestCase):
         response = self.app.get('/api?incorrectQueryParameter=someValue', follow_redirects=True)
         self.assertEqual(response.status_code, 400)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_api_disease_200(self, mock_cursor):
         """Test successful disease search."""
         mock_cursor.return_value = mock_cur = mock.MagicMock()
@@ -54,7 +54,7 @@ class TestSearchAPI(unittest.TestCase):
         response = self.app.get('/api?type=disease&query=someDisease', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_api_gene_200(self, mock_cursor):
         """Test successful gene search."""
         mock_cursor.return_value = mock_cur = mock.MagicMock()
@@ -67,7 +67,7 @@ class TestSearchAPI(unittest.TestCase):
         with self.assertRaises(IndexError):
             self.app.get('/api?type=gene&query=someGene', follow_redirects=True)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_api_disease_404(self, mock_cursor):
         """Test HTTP 404: Not found. For type: disease."""
         mock_cursor.return_value = mock_cur = mock.MagicMock()
@@ -75,7 +75,7 @@ class TestSearchAPI(unittest.TestCase):
         response = self.app.get('/api?type=disease&query=nonExistantDisease', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_api_gene_404(self, mock_cursor):
         """Test HTTP 404: Not found. For type: gene."""
         mock_cursor.return_value = mock_cur = mock.MagicMock()
@@ -83,7 +83,7 @@ class TestSearchAPI(unittest.TestCase):
         response = self.app.get('/api?type=gene&query=nonExistantGene,GRCh38', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_autocomplete_404(self, mock_cursor):
         """Test HTTP 404: Not found."""
         mock_cursor.return_value = mock_cur = mock.MagicMock()
@@ -91,13 +91,13 @@ class TestSearchAPI(unittest.TestCase):
         response = self.app.get('/autocomplete?q=nonExistantKeyword', follow_redirects=True)
         self.assertEqual(response.status_code, 404)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_autocomplete_400(self, mock_cursor):
         """Test HTTP 400: Bad request."""
         response = self.app.get('/autocomplete', follow_redirects=True)
         self.assertEqual(response.status_code, 400)
 
-    @mock.patch('beacon_search.app.db_cursor')
+    @mock.patch('beacon_search.wsgi.db_cursor')
     def test_autocomplete_200(self, mock_cursor):
         """Test successful autocomplete."""
         mock_cursor.return_value = mock_cur = mock.MagicMock()
