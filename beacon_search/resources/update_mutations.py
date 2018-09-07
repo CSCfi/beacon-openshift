@@ -27,8 +27,7 @@ def fast_iter(context, func, genes, keys, triggers, db):
     timestamp_file = time.strftime('%d-%m-%Y_%H-%M-%S')
     timestamp_pretty = time.strftime('%d.%m.%Y %H:%M:%S')
 
-    lf = open('logs/parserun_' + str(timestamp_file) + '.txt', 'w')
-    lf.write('PROCESS STARTED at ' + str(timestamp_pretty) + '\n')
+    print('INFO: PROCESS STARTED at ' + str(timestamp_pretty) + '\n')
     i = 0  # iterator counter
 
     for event, elem in context:
@@ -40,10 +39,8 @@ def fast_iter(context, func, genes, keys, triggers, db):
                 del ancestor.getparent()[0]
     del context
 
-    print(str(i) + ' xml elements read, runtime: %.2f' % round(time.time()-start, 2) + ' s.', file=lf)
-    lf.write('PROCESS ENDED at ' + str(time.strftime('%d.%m.%Y %H:%M:%S')))
-    lf.close()
-    return
+    print('INFO: ' + str(i) + ' xml elements read, runtime: %.2f' % round(time.time()-start, 2) + ' s.')
+    print('INFO: PROCESS ENDED at ' + str(time.strftime('%d.%m.%Y %H:%M:%S')))
 
 
 def process_element(event, elem, genes, keys, triggers, db):
@@ -76,16 +73,9 @@ def process_element(event, elem, genes, keys, triggers, db):
     if inelem[0] is True and 'SequenceLocation' in elem.tag:
         if triggers['vcf'] in elem.attrib:
 
-            # write variables to dictionary
-            # results = {}
-            # for row in elem.attrib.items():
-            #     if row[0] in keys:
-            #         results[row[0]] = row[1]
-            # TO DO check if this is ok
+            # write variables to dictionary and insert them
             results = {row[0]: row[1] for row in elem.attrib.items() if row[0] in keys}
             insert_to_db(db, inelem[1][0], results)
-
-    return
 
 
 def insert_to_db(db, entrez, items):
@@ -110,7 +100,6 @@ def insert_to_db(db, entrez, items):
                 params)
     db.commit()
     cur.close()
-    return
 
 
 def gene_catalogue(db):
