@@ -9,10 +9,10 @@ The contents of the subdirectories are briefly described below, and in more deta
 
 APIs can be explored as OpenAPI 3.0 specification in: [Swagger Editor](http://editor.swagger.io/?url=https://raw.githubusercontent.com/CSCfi/beacon-openshift/master/beacon-search-apis.yaml)
 
-* [beacon-search](https://github.com/CSCfi/beacon-openshift/tree/master/beacon-search) - Prototype suggestion API to find relevant variants related to diseases and genes;
-* [beacon-auth](https://github.com/CSCfi/beacon-openshift/tree/master/beacon-auth) - ELIXIR AAI client API for storing access token to be used in beacon-aggregator;
-* [beacon-aggregator](https://github.com/CSCfi/beacon-openshift/tree/master/beacon-aggregator) - Master Beacon API endpoint that queries known beacons and combines the results into a single response;
-* [beacon-mockup](https://github.com/CSCfi/beacon-openshift/tree/master/beacon-mockup) - Mockup Beacon APIs used in testing software operability.
+* [beacon_search](https://github.com/CSCfi/beacon-openshift/tree/master/beacon_search) - Prototype suggestion API to find relevant variants related to diseases and genes;
+* [beacon_auth](https://github.com/CSCfi/beacon-openshift/tree/master/beacon_auth) - ELIXIR AAI client API for storing access token to be used in beacon-aggregator;
+* [beacon_aggregator](https://github.com/CSCfi/beacon-openshift/tree/master/beacon_aggregator) - Master Beacon API endpoint that queries known beacons and combines the results into a single response;
+* [beacon_mockup](https://github.com/CSCfi/beacon-openshift/tree/master/beacon_mockup) - Mockup Beacon APIs used in testing software operability.
 
 ### UI
 
