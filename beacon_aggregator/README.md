@@ -49,12 +49,12 @@ python app.py
 Create container for `beacon-search`
 ```
 s2i build git@github.com:CSCfi/beacon-openshift.git \
-    --context-dir=beacon-search \
+    --context-dir=beacon_aggregator \
     centos/python-35-centos7 \
-    beacon-search
+    beacon_aggregator
 ```
 
 Run the created container:
 ```
-docker run -p 8080:8080 beacon-search
+docker run -p 8080:8080 beacon_aggregator
 ```

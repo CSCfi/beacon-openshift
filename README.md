@@ -38,17 +38,17 @@ Environment variables can be set with [s2i](https://github.com/openshift/source-
 e.g. Create container for `beacon-mockup`
 ```
 s2i build git@github.com:CSCfi/beacon-openshift.git \
-    --context-dir=beacon-mockup \
+    --context-dir=beacon_mockup \
     centos/python-35-centos7 \
-    beacon-mockup
+    beacon_mockup
 ```
 
 Run the created container:
 ```
-docker run -p 8080:8080 beacon-mockup
+docker run -p 8080:8080 beacon_mockup
 ```
 
-Similar steps can be followed for `beacon-aggregator` (requires `centos/python-36-centos7` base image), `beacon-search`, `beacon-auth` and `beacon-ui` (requires `centos/httpd-24-centos7`).
+Similar steps can be followed for `beacon-aggregator` (requires `centos/python-36-centos7` base image), `beacon_search`, `beacon_auth` and `beacon-ui` (requires `centos/httpd-24-centos7`).
 
 ### Running Tests
 You can run tests manually with
