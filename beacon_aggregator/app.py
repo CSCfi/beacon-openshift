@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 
-import asyncio
 import aiohttp
 from aiohttp import web
 import json
 import logging
-import aiohttp_cors
 import os
 
 # Logging
@@ -52,7 +50,7 @@ async def query_string_endpoint(request):
 
     # Iterate over beacon URLs and queue requests to them
     for beacon in BEACONS:
-        task = asyncio.ensure_future(query(beacon, q, request.cookies['access_token']))
+        task = query(beacon, q, request.cookies['access_token'])
         tasks.append(task)
         LOG.info(f'Queueing request to {beacon} with {q}')
     try:
@@ -61,7 +59,7 @@ async def query_string_endpoint(request):
 
         # Fetch responses from the queued requests, and print
         # them into the streamed response as they complete
-        for index, res in enumerate(asyncio.as_completed(tasks)):
+        for index, res in enumerate(tasks):
             if index == len(tasks)-1:
                 await resp.write(json.dumps(await res).encode('utf-8'))
                 LOG.info(f'Processing requests {index+1}/{len(tasks)}')
@@ -99,18 +97,8 @@ async def query(beacon, q, access_token):
 
 def main():
     """Start the web server."""
-    loop = asyncio.get_event_loop()
-    server = web.Application(loop=loop)
-    cors = aiohttp_cors.setup(server, defaults={
-        "*": aiohttp_cors.ResourceOptions(
-            allow_credentials=True,
-            expose_headers="*",
-            allow_headers="*",
-        )
-    })
+    server = web.Application()
     server.router.add_routes(routes)
-    for route in list(server.router.routes()):
-        cors.add(route)
     web.run_app(server,
                 host=os.environ.get('APP_HOST', 'localhost'),
                 port=os.environ.get('APP_PORT', 8080))
