@@ -100,8 +100,10 @@ async def query(beacon, q, access_token):
 def main():
     """Start the web server."""
     server = web.Application()
+    # Set this to the domain of the GUI to only allow requests from that source
+    DOMAIN = os.environ.get('CORS_ALLOWED_DOMAIN', 'localhost:3000')
     cors = aiohttp_cors.setup(server, defaults={
-        "https://beacon-ui-beacon.rahtiapp.fi": aiohttp_cors.ResourceOptions(
+        DOMAIN: aiohttp_cors.ResourceOptions(
             allow_credentials=True,
             expose_headers="*",
             allow_headers="*",
