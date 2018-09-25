@@ -101,7 +101,7 @@ def main():
     """Start the web server."""
     server = web.Application()
     cors = aiohttp_cors.setup(server, defaults={
-        "*": aiohttp_cors.ResourceOptions(
+        "https://beacon-ui-beacon.rahtiapp.fi": aiohttp_cors.ResourceOptions(
             allow_credentials=True,
             expose_headers="*",
             allow_headers="*",
