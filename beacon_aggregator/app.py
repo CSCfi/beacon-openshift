@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import aiohttp
-from aiohttp import web
+import aiohttp_cors
 import json
 import logging
 import os
+
+from aiohttp import web
 
 # Logging
 FORMAT = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(funcName)s: %(message)s'
@@ -98,7 +100,16 @@ async def query(beacon, q, access_token):
 def main():
     """Start the web server."""
     server = web.Application()
+    cors = aiohttp_cors.setup(server, defaults={
+        "*": aiohttp_cors.ResourceOptions(
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+        )
+    })
     server.router.add_routes(routes)
+    for route in list(server.router.routes()):
+        cors.add(route)
     web.run_app(server,
                 host=os.environ.get('APP_HOST', 'localhost'),
                 port=os.environ.get('APP_PORT', 8080))
