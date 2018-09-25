@@ -30,6 +30,7 @@ The API requires some configuration variables stored as environment variables. I
 | --- | --- | --- |
 | `BEACON_LIST` | `beacons.txt` | Contains Beacon URLs line by line, see [beacons.txt](https://github.com/CSCfi/beacon-openshift/blob/master/beacon-aggregator/beacons.txt) for reference. |
 | `HTTPS_ONLY` | `True` | Determines security level when making variant calls to Beacons. If set to `False` `http://` Beacons can be queried. |
+| `CORS_ALLOWED_DOMAIN` | `localhost:3000` | Set this variable to the hostname of the GUI (beacon-ui) to only allow CORS requests to be made from that source. |
 | `APP_HOST` | `localhost` | Web server host address inside the Openshift container. This is not the same as the external URL. |
 | `APP_PORT` | `8080` | Web server port inside the Openshift container. |
 
