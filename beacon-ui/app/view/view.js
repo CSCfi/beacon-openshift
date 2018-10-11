@@ -45,6 +45,14 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     }
   }
 
+  $scope.checkBonaFide = function() {
+    if($cookies.get('bona_fide_status')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   $scope.classRow = "resultCard";
   $scope.changeCardClass = function(display){
       $scope.classRow = display;
