@@ -1,4 +1,4 @@
 https://beacon-mockup-beacon.rahtiapp.fi/api/true
 https://beacon-mockup-beacon.rahtiapp.fi/api/false
 https://beacon-mockup-beacon.rahtiapp.fi/api/null
-https://beaconapi-elixirbeacon.rahtiapp.fi/query
+https://beaconpy-elixirbeacon.rahtiapp.fi/query
