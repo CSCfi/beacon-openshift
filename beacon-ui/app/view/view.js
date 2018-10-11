@@ -32,7 +32,10 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 
   $scope.alertType = true;
   $scope.closeAlert = function() {
-     $scope.alertType = null;
+      // console.log('try to set cookie');
+      // $cookies.put('cookies_accepted', 'agreed to cookies');
+      // console.log('cookie was set');
+      $scope.alertType = null;
   };
 
   that.regexp = /^([XY0-9]+) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
@@ -53,6 +56,15 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     }
   }
 
+  // $scope.checkCookiesAccepted = function() {
+  //   console.log('fetch cookie');
+  //   if($cookies.get('cookies_accepted')) {
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
+
   $scope.classRow = "resultCard";
   $scope.changeCardClass = function(display){
       $scope.classRow = display;
@@ -61,10 +73,11 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   that.querySearch = function(query){
     that.searchClick = false;
     if (query && that.searchText.length >= 2) {
-      return $http.get($scope.autocompleteUrl, {params: {q: query}})
-      .then(function(response){
-        return response.data;
-      })
+      // return $http.get($scope.autocompleteUrl, {params: {q: query}})
+      // .then(function(response){
+      //   return response.data;
+      // })
+      return {};
     } else {
       return {};
     }
@@ -121,13 +134,14 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       that.selectedItem = {type: 'variant', name: that.searchText}
 
     }
-    if (that.selectedItem && that.selectedItem.type == 'disease') {
-      that.triggerCredentials = false;
-      $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText;
-    } else if (that.selectedItem && that.selectedItem.type == 'gene') {
-      that.triggerCredentials = false;
-      $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
-    } else if (that.selectedItem && that.selectedItem.type == 'variant') {
+    // if (that.selectedItem && that.selectedItem.type == 'disease') {
+    //   that.triggerCredentials = false;
+    //   $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText;
+    // } else if (that.selectedItem && that.selectedItem.type == 'gene') {
+    //   that.triggerCredentials = false;
+    //   $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
+    // } else 
+    if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
       var params = that.searchText.match(that.regexp)
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
@@ -150,13 +164,14 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 
   $scope.searchExample = function(searchtype) {
     that.searchClick = false;
-    if (searchtype == 'disease') {
-      that.searchText = 'Alzheimer';
-      document.querySelector('#autoCompleteId').focus();
-    } else if (searchtype == 'gene') {
-      that.searchText = 'APOE';
-      document.querySelector('#autoCompleteId').focus();
-    } else if (searchtype == 'variant') {
+    // if (searchtype == 'disease') {
+    //   that.searchText = 'Alzheimer';
+    //   document.querySelector('#autoCompleteId').focus();
+    // } else if (searchtype == 'gene') {
+    //   that.searchText = 'APOE';
+    //   document.querySelector('#autoCompleteId').focus();
+    // } else
+    if (searchtype == 'variant') {
       that.searchText = '19 : 44907807 G > A';
       document.querySelector('#autoCompleteId').focus();
     } else {

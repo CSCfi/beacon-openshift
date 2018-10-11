@@ -366,12 +366,17 @@ md-autocomplete#custom-template {
   padding-right: 0.3em;
 }
 
+.btn-acceptCookie {
+	float: right;
+}
+
 #fixedInfo {
 	position: fixed;
-	left: 10px;
-	top: 10px;
-	width: 21%;
+	left:25%;
+	bottom: 7px;
+	width: 50%;
 	z-index: 1;
+	margin: 0;
 }
 
 #fixedInfo h4 { font-size: 1.1em;}

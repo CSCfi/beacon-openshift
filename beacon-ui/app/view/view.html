@@ -69,11 +69,12 @@
       </form>
       </md-content>
       </div>
-      <div id="searchExample">Show example search:
+      <!-- <div id="searchExample">Show example search:
         <a href="" ng-click="searchExample('disease')">Disease</a> /
         <a href="" ng-click="searchExample('gene')">Gene</a> /
         <a href="" ng-click="searchExample('variant')">Variant</a>
-      </div>
+      </div> -->
+      <div id="searchExample"><a href="" ng-click="searchExample('variant')">Show example search</a></div>
     </div>
     <hr/>
   </div>
@@ -240,12 +241,13 @@
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
   <div style="text-align:center"><div ng-if="ctrl.message.message">{{ctrl.message.message}}</div></div>
-  <div id="fixedInfo" uib-alert ng-show='alertType' class="alert alert-success" role="alert">
+  <div ng-show="alertType" id="fixedInfo" uib-alert class="alert alert-success" role="alert">
     <h4 class="alert-heading">Elixir Beacon Network Prototype</h4>
-    <p>Disease-Gene-Variant data has been aggregated with data extracted from <a href="https://hpo.jax.org/app/">HPO</a>, <a href="https://www.ncbi.nlm.nih.gov/clinvar/">NCBI</a> and <a href="https://omim.org/">OMIM</a>, and the data ownership belongs to those organisations respectively.</p>
-    <hr/>
-    <p class="mb-0">This prototype web application utilises cookies. By using this service you accept them and agree to store them in your browser's memory temporarily.</p>
-    <button type="button" class="btn btn-success btn-sm" ng-click="closeAlert()">
+    <!-- This feature (disease-gene-variant discovery service) has been disabled, and will be re-enabled in the future when it is suggested for beacon enhancement -->
+    <!-- <p>Disease-Gene-Variant data has been aggregated with data extracted from <a href="https://hpo.jax.org/app/">HPO</a>, <a href="https://www.ncbi.nlm.nih.gov/clinvar/">NCBI</a> and <a href="https://omim.org/">OMIM</a>, and the data ownership belongs to those organisations respectively.</p> -->
+    <!-- <hr/> -->
+    <p class="mb-0">This prototype web application utilises cookies. By using this service you accept the cookies and agree to store the cookies in your browser's memory temporarily.</p>
+    <button type="button" class="btn btn-success btn-sm btn-acceptCookie" ng-click="closeAlert()">
       Acknowledge
     </button>
   </div>
