@@ -52,7 +52,11 @@ async def query_string_endpoint(request):
 
     # Iterate over beacon URLs and queue requests to them
     for beacon in BEACONS:
-        task = query(beacon, q, request.cookies['access_token'])
+        try:
+            access_token = request.cookies['access_token']
+        except KeyError as e:
+            access_token = None
+        task = query(beacon, q, access_token)
         tasks.append(task)
         LOG.info(f'Queueing request to {beacon} with {q}')
     try:
@@ -81,6 +85,10 @@ async def query_string_endpoint(request):
 
 async def query(beacon, q, access_token):
     """Query the beacon endpoint."""
+    headers = {'User-Agent': 'ELIXIR Beacon Aggregator 1.0'}
+    if access_token:
+        headers.update({'Authorization': 'Bearer ' + access_token})
+
     # Create a new session for querying a beacon
     async with aiohttp.ClientSession() as session:
         try:
@@ -88,7 +96,7 @@ async def query(beacon, q, access_token):
             async with session.get(beacon,
                                    params=q,
                                    ssl=os.environ.get('HTTPS_ONLY', True),
-                                   headers={'Authorization': 'Bearer '+access_token}) as response:
+                                   headers=headers) as response:
                 LOG.info(f'Made request to {beacon} with {q}')
 
                 # Return the response asynchronously when it arrives
