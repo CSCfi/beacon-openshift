@@ -12,6 +12,7 @@ import urllib.parse
 CLIENT_ID = os.environ.get('CLIENT_ID', None)
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET', None)
 CALLBACK_URL = os.environ.get('CALLBACK_URL', None)
+BONA_FIDE_URL = os.environ.get('BONA_FIDE_URL', 'http://www.ga4gh.org/beacon/bonafide/ver1.0')
 
 # Logging
 FORMAT = '[%(asctime)s][%(name)s][%(process)d %(processName)s][%(levelname)-8s] (L:%(lineno)s) %(funcName)s: %(message)s'
@@ -83,10 +84,6 @@ def elixir_callback():
     code = request.args.get('code')
     access_token = get_token(code)
 
-    # Option to return user details such as elixir id with response
-    # userdetails = get_userdetails(access_token)  # DISABLED FOR NOW
-    # response = app.make_response(userdetails)
-
     try:
         # Create a redirection to Beacon UI with access token stored in cookies
         response = application.make_response(redirect(os.environ.get('REDIRECT_URL', None)))
@@ -95,6 +92,13 @@ def elixir_callback():
                             max_age=int(os.environ.get('COOKIE_AGE', 3600)),
                             secure=os.environ.get('COOKIE_SECURE', True),
                             domain=os.environ.get('COOKIE_DOMAIN', None))
+        if get_bona_fide_status(access_token):
+            # If user has bona fide status, add a cookie for this
+            response.set_cookie('bona_fide_status',
+                                BONA_FIDE_URL,
+                                max_age=int(os.environ.get('COOKIE_AGE', 3600)),
+                                secure=os.environ.get('COOKIE_SECURE', True),
+                                domain=os.environ.get('COOKIE_DOMAIN', None))
     except Exception as e:
         LOG.error(str(e))
 
@@ -116,16 +120,17 @@ def get_token(code):
     return token_json['access_token']
 
 
-''' DISABLED FOR NOW
-def get_userdetails(access_token):
-    """Request user details from ELIXIR AAI."""
+def get_bona_fide_status(access_token):
+    """Request Bona Fide status for user from ELIXIR AAI."""
     headers = base_headers()
     headers.update({"Authorization": "Bearer " + access_token})
     response = requests.get("https://login.elixir-czech.org/oidc/userinfo",
                             headers=headers)
-    userdetails = response.json()
-    return userdetails['sub']
-'''
+    try:
+        if response.json()['bona_fide_status'] == BONA_FIDE_URL:
+            return True 
+    except KeyError as ke:
+        pass
 
 
 def main():
