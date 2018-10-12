@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.4
-
+"""Prototype suggestion API to find relevant variants related to diseases and genes."""
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS

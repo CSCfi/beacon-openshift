@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""ELIXIR AAI client API for storing access token to be used in beacon-aggregator."""
 
 from flask import Flask, abort, request, redirect
 from uuid import uuid4

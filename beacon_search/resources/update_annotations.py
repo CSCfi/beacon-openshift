@@ -1,4 +1,5 @@
 #!/usr/bin/env python3.4
+"""Master Beacon API endpoint that queries known beacons and combines the results into a single response."""
 
 import pymysql
 import sys
