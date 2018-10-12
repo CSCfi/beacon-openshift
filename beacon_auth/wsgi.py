@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""ELIXIR AAI client API for storing access token to be used in beacon-aggregator."""
 
 from flask import Flask, abort, request, redirect
 from uuid import uuid4
@@ -128,8 +129,9 @@ def get_bona_fide_status(access_token):
                             headers=headers)
     try:
         if response.json()['bona_fide_status'] == BONA_FIDE_URL:
-            return True 
+            return True
     except KeyError as ke:
+        LOG.error(ke)
         pass
 
 

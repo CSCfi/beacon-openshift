@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+"""Master Beacon API endpoint that queries known beacons and combines the results into a single response."""
 
 import aiohttp
 import aiohttp_cors
@@ -55,6 +56,7 @@ async def query_string_endpoint(request):
         try:
             access_token = request.cookies['access_token']
         except KeyError as e:
+            LOG.info(e)
             access_token = None
         task = query(beacon, q, access_token)
         tasks.append(task)

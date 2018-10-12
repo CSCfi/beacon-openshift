@@ -24,7 +24,7 @@ def fast_iter(context, func, genes, keys, triggers, db):
     :db: database connection object
     """
     start = time.time()  # runtime start
-    timestamp_file = time.strftime('%d-%m-%Y_%H-%M-%S')
+    # timestamp_file = time.strftime('%d-%m-%Y_%H-%M-%S')
     timestamp_pretty = time.strftime('%d.%m.%Y %H:%M:%S')
 
     print('INFO: PROCESS STARTED at ' + str(timestamp_pretty) + '\n')

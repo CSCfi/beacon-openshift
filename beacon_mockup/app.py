@@ -1,5 +1,5 @@
 #!usr/bin/env python3.4
-
+"""Mockup Beacon APIs used in testing software operability."""
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
