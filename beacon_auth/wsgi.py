@@ -128,8 +128,9 @@ def get_bona_fide_status(access_token):
                             headers=headers)
     try:
         if response.json()['bona_fide_status'] == BONA_FIDE_URL:
-            return True 
+            return True
     except KeyError as ke:
+        LOG.error(ke)
         pass
 
 
