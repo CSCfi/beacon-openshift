@@ -372,13 +372,13 @@ md-autocomplete#custom-template {
 
 #fixedInfo {
 	position: fixed;
-	left:25%;
+	left:30%;
 	bottom: 7px;
-	width: 50%;
+	width: 40%;
 	z-index: 1;
 	margin: 0;
 }
 
 #fixedInfo h4 { font-size: 1.1em;}
-#fixedInfo p { font-size: 0.8em;}
+#fixedInfo p { font-size: 0.9em;}
 #fixedInfo button {margin-top: 5px;}
