@@ -151,7 +151,11 @@ md-card-content ul li {
 	justify-content: space-between;
 }
 
-#beaconLogin a:last-child {
+#beaconLogin .btn {
+	margin-top: 6px;
+}
+
+#beaconLogin span:last-child {
   margin-left: auto;
 	margin-right: 10px;
 }
