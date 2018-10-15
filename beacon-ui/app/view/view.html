@@ -219,16 +219,20 @@
     <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
       <md-card-header class="cardItem">
         <md-card-header-text>
-          <span class="md-title">{{datum.beaconId}}</span>
-          <span class="md-subhead">Number of registered datasets: {{datum.datasetAlleleResponses.length}}</span>
+          <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
+          <!-- <span class="md-subhead">Number of registered datasets: {{datum.datasetAlleleResponses.length}}</span>
           <span ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true} as filtered">
           </span>
-          <span class="md-subhead">Number of available datasets: {{filtered.length}}</span>
+          <span class="md-subhead">Number of available datasets: {{filtered.length}}</span> -->
         </md-card-header-text>
       </md-card-header>
       <md-card-content ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true}"  class="cardItem">
         <ul>
           <li><strong>Dataset ID:</strong> {{ dataset.datasetId }}</li>
+          <li><strong>Description:</strong> {{ dataset.note }}</li>
+          <li><strong>Allele Count:</strong> {{ dataset.variantCount }}</li>
+          <li><strong>Calls / Samples:</strong> {{ dataset.callCount }} / {{ dataset.sampleCount }}</li>
+          <li><strong>Frequency:</strong> {{ dataset.frequency }}</li>
           <li><strong>Access:</strong> {{ dataset.info.accessType }}</li>
           <li ng-if="dataset.externalUrl"><strong>Dataset Url:</strong>
             <a target="_blank" href="{{dataset.externalUrl}}">

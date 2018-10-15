@@ -205,6 +205,12 @@ md-card-content ul li {
 	min-width: 300px;
 }
 
+.beacon-api-version {
+	padding-left: 5px;
+	font-size: 0.7em;
+	color: #F57D20;
+}
+
 .result-row .resultCard md-card-header-text {
 	overflow: hidden;
 }

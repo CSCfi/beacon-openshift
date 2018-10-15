@@ -150,8 +150,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       var params = that.searchText.match(that.regexp)
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                    $scope.assembly.selected +
-                   '&referenceName=' + params[1] + '&start=' + params[2]+
-                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4];
+                   '&referenceName=' + params[1] + '&start=' + params[2] +
+                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] + 
+                   '&includeDatasetResponses=HIT';
     } else {
       console.log('search type unselected');
     }
@@ -209,7 +210,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       withCredentials: true,
       url: $scope.url = $scope.aggregatorUrl + 'assemblyId='+ assembly +
                         '&referenceName='+ chr + '&start=' + pos +
-                        '&referenceBases=' + ref + '&alternateBases=' + alt
+                        '&referenceBases=' + ref + '&alternateBases=' + alt +
+                        '&includeDatasetResponses=HIT'
     }).then(function successCallback(response) {
         that.message = response;
       }, function errorCallback(response) {
