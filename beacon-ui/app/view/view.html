@@ -1,10 +1,14 @@
 <div id="beaconLogin" id="popupContainer" >
-  <a ng-if="checkLogin() && !checkBonaFide()" href="https://www.elixir-europe.org/services/compute/aai/bonafide" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true"><i class="fas fa-hand-point-right"></i> Discover more as Bona Fide!</a>
-  <a ng-if="checkLogin() && checkBonaFide()" href="#" class="btn btn-success disabled" tabindex="-1" role="button" aria-disabled="true">Bona Fide</a>
-  <a ng-if="checkLogin()" href="#" class="btn btn-primary disabled" tabindex="-1" role="button" aria-disabled="true">User Authenticated</a>
-  <a href="https://beacon-auth-beacon.rahtiapp.fi/app" ng-if="!checkLogin()">
-    <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
-  </a>
+  <span>
+    <a ng-if="checkLogin() && !checkBonaFide()" href="https://www.elixir-europe.org/services/compute/aai/bonafide" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true"><i class="fas fa-hand-point-right"></i> Discover more as Bona Fide!</a>
+    <a ng-if="checkLogin() && checkBonaFide()" href="#" class="btn btn-success disabled" tabindex="-1" role="button" aria-disabled="true">Bona Fide</a>
+    <a ng-if="checkLogin()" href="#" class="btn btn-primary disabled" tabindex="-1" role="button" aria-disabled="true">User Authenticated</a>
+  </span>
+  <span>
+    <a href="https://beacon-auth-beacon.rahtiapp.fi/app" ng-if="!checkLogin()">
+      <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
+    </a>
+  </span>
 </div>
 <div id="beaconLogo">
   <a href="#"><img id="logo" src="assets/beacon-small-3.png" /></a>
