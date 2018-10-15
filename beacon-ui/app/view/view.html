@@ -1,10 +1,10 @@
 <div id="beaconLogin" id="popupContainer" >
-  <a href="https://beacon-auth-beacon.rahtiapp.fi/app" ng-if="!checkLogin()">
-    <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
-  </a>
   <a ng-if="checkLogin() && !checkBonaFide()" href="https://www.elixir-europe.org/services/compute/aai/bonafide" class="btn btn-info" tabindex="-1" role="button" aria-disabled="true"><i class="fas fa-hand-point-right"></i> Discover more as Bona Fide!</a>
   <a ng-if="checkLogin() && checkBonaFide()" href="#" class="btn btn-success disabled" tabindex="-1" role="button" aria-disabled="true">Bona Fide</a>
   <a ng-if="checkLogin()" href="#" class="btn btn-primary disabled" tabindex="-1" role="button" aria-disabled="true">User Authenticated</a>
+  <a href="https://beacon-auth-beacon.rahtiapp.fi/app" ng-if="!checkLogin()">
+    <img width="150" src="assets/elixir-login-new.png" title="ELIXIR AAI"/>
+  </a>
 </div>
 <div id="beaconLogo">
   <a href="#"><img id="logo" src="assets/beacon-small-3.png" /></a>
@@ -252,7 +252,7 @@
     <!-- <p>Disease-Gene-Variant data has been aggregated with data extracted from <a href="https://hpo.jax.org/app/">HPO</a>, <a href="https://www.ncbi.nlm.nih.gov/clinvar/">NCBI</a> and <a href="https://omim.org/">OMIM</a>, and the data ownership belongs to those organisations respectively.</p> -->
     <!-- <hr/> -->
     <p class="mb-0">This prototype web application utilises cookies. By using this service you accept the cookies and agree to store the cookies in your browser's memory temporarily.</p>
-    <button type="button" class="btn btn-success btn-sm btn-acceptCookie" ng-click="closeAlert()">
+    <button type="button" class="btn btn-success btn-sm btn-acceptCookie" ng-click="acknowledge()">
       Acknowledge
     </button>
   </div>

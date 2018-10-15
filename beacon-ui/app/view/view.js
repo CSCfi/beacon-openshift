@@ -30,12 +30,24 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
 	});
 
-  $scope.alertType = true;
-  $scope.closeAlert = function() {
-      // console.log('try to set cookie');
-      // $cookies.put('cookies_accepted', 'agreed to cookies');
-      // console.log('cookie was set');
-      $scope.alertType = null;
+  // $scope.object = {alertType : true}
+    // $scope.alertType = true;
+  if($cookies.get('info') != null) {
+    console.log('cookie was set');
+    $scope.alertType = false;
+  } else {
+    console.log('cookie was not set');
+    $scope.alertType = true;
+  }
+  $scope.acknowledge = function() {
+      var when = new Date();
+      var mm =when.getMonth() + 2;
+      var y = when.getFullYear();
+      $cookies.put("info", "acknowledged", {
+        expires: new Date(y, mm)
+      });
+      console.log('cookie was set');
+      $scope.alertType = false;
   };
 
   that.regexp = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
@@ -55,15 +67,6 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       return false;
     }
   }
-
-  // $scope.checkCookiesAccepted = function() {
-  //   console.log('fetch cookie');
-  //   if($cookies.get('cookies_accepted')) {
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   $scope.classRow = "resultCard";
   $scope.changeCardClass = function(display){
@@ -140,7 +143,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     // } else if (that.selectedItem && that.selectedItem.type == 'gene') {
     //   that.triggerCredentials = false;
     //   $scope.url = $scope.baseUrl + '/api?' + 'type=' + that.selectedItem.type + '&query=' + that.searchText + ',' + $scope.assembly.selected;
-    // } else 
+    // } else
     if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
       var params = that.searchText.match(that.regexp)
