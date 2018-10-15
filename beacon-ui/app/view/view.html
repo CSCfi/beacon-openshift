@@ -233,7 +233,7 @@
           <li><strong>Allele Count:</strong> {{ dataset.variantCount }}</li>
           <li><strong>Calls / Samples:</strong> {{ dataset.callCount }} / {{ dataset.sampleCount }}</li>
           <li><strong>Frequency:</strong> {{ dataset.frequency }}</li>
-          <li><strong>Access:</strong> {{ dataset.info.accessType }}</li>
+          <li><strong>Access:</strong> <span ng-repeat="infoItem in dataset.info">{{ infoItem.accessType }}</span></li>
           <li ng-if="dataset.externalUrl"><strong>Dataset Url:</strong>
             <a target="_blank" href="{{dataset.externalUrl}}">
               {{ dataset.externalUrl }}
