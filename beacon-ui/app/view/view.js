@@ -44,7 +44,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       var mm =when.getMonth() + 2;
       var y = when.getFullYear();
       $cookies.put("info", "acknowledged", {
-        expires: new Date(y, mm)
+        expires: new Date(y, mm),
+        path: '/'
       });
       console.log('cookie was set');
       $scope.alertType = false;
