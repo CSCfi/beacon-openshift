@@ -177,7 +177,10 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     //   document.querySelector('#autoCompleteId').focus();
     // } else
     if (searchtype == 'variant') {
-      that.searchText = '19 : 44907807 G > A';
+      // Maybe add examples for other chromosomes later when we have more datasets
+      var variants = ['MT : 10 T > C', 'MT : 7600 G > A', 'MT : 195 TTACTAAAGT > CCACTAAAGT', 'MT : 14037 A > G']
+      // Select example variant from list at random
+      that.searchText = variants[Math.floor(Math.random()*variants.length)];
       document.querySelector('#autoCompleteId').focus();
     } else {
       that.searchText = 'Unknown';
