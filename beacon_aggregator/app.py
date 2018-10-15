@@ -107,8 +107,8 @@ async def query(beacon, q, access_token):
             LOG.info(str(e))
 
 
-def main():
-    """Start the web server."""
+def init():
+    """Initialise server."""
     server = web.Application()
     # Set this to the domain of the GUI to only allow requests from that source
     DOMAIN = os.environ.get('CORS_ALLOWED_DOMAIN', 'localhost:3000')
@@ -122,7 +122,12 @@ def main():
     server.router.add_routes(routes)
     for route in list(server.router.routes()):
         cors.add(route)
-    web.run_app(server,
+    return server
+
+
+def main():
+    """Start the web server."""
+    web.run_app(init(),
                 host=os.environ.get('APP_HOST', 'localhost'),
                 port=os.environ.get('APP_PORT', 8080))
 
