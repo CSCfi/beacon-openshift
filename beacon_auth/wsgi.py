@@ -52,7 +52,7 @@ def make_authorization_url():
               "state": state,
               "redirect_uri": CALLBACK_URL,
               "duration": "temporary",
-              "scope": 'openid bona_fide_status'}
+              "scope": 'openid bona_fide_status permissions_rems'}
     url = "https://login.elixir-czech.org/oidc/authorize?" + urllib.parse.urlencode(params)
     return url
 
