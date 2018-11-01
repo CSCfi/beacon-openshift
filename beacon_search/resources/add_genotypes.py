@@ -71,9 +71,10 @@ def add_genotypes(db, omimlist):
                 updates += i
                 i = 0
                 db.commit()
-                sys.stdout.write(str(updates) + '/' + str(len(omimlist)) +
-                                 ' genotype titles updated. Total runtime: %.2f' %
-                                 round(time.time()-timestart, 2) + ' s.\r')
+                run_time = round(time.time()-timestart, 2)
+                sys.stdout.write("{0}/{1}  genotype titles updated. Total runtime: {2} s.\r".format(str(updates),
+                                                                                                    str(len(omimlist),
+                                                                                                    run_time)))
                 sys.stdout.flush()
     except Exception as e:
         print(str(e))
