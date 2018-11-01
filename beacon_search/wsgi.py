@@ -149,7 +149,7 @@ def api():
                     return http_error(404, 'Gene not found')
 
             except Exception as e:
-                logging.info('ERROR IN /api?gene=' + query['gene'] + '&assembly=' + query['assembly'] + ' :: ' + str(e))
+                logging.info("ERROR IN /api?gene={0}&assembly={1} :: {2}".format(query['gene'], query['assembly'], str(e)))
             finally:
                 cur.connection.close()
         else:
