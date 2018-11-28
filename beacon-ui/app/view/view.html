@@ -219,8 +219,9 @@
     Authentication required to use this feature.
   </div> -->
   <!-- <div ng-if="ctrl.selectedItem && ctrl.searchClick && checkLogin() && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row"> -->
-  <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
-    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
+  <!-- ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" -->
+  <div class="row result-row">
+    <md-card class="resultCard" ng-repeat="datum in exampleResponse | filter:{exists:true}">
       <md-card-header class="cardItem">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
@@ -230,23 +231,43 @@
           <span class="md-subhead">Number of available datasets: {{filtered.length}}</span> -->
         </md-card-header-text>
       </md-card-header>
-      <md-card-content ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true}"  class="cardItem">
-        <ul>
-          <li><strong>Dataset ID:</strong> {{ dataset.datasetId }}</li>
-          <li><strong>Description:</strong> {{ dataset.note }}</li>
-          <li><strong>Variant:</strong> {{ dataset.referenceBases }} > {{ dataset.alternateBases }}</li>
-          <li><strong>Allele Count:</strong> {{ dataset.variantCount }}</li>
-          <li><strong>Calls / Samples:</strong> {{ dataset.callCount }} / {{ dataset.sampleCount }}</li>
-          <li><strong>Frequency:</strong> {{ dataset.frequency }}</li>
-          <li><strong>Access:</strong> <span ng-repeat="infoItem in dataset.info">{{ infoItem.accessType }}</span></li>
-          <!-- <li><strong>Access:</strong> {{ dataset.info.accessType }}</li> -->
-          <li ng-if="dataset.externalUrl"><strong>Dataset Url:</strong>
-            <a target="_blank" href="{{dataset.externalUrl}}">
-              {{ dataset.externalUrl }}
-              <i class="fas fa-external-link-alt"></i>
-            </a></li>
-        </ul>
+      <md-card ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'"  class="cardItem">
+      <md-card-content>
+        <h5><strong>Dataset ID:</strong> {{ key.split(',')[0] }}</h5>
+        <span ><strong>Dataset Url:</strong>
+          <a target="_blank" href="{{ key.split(',')[1] }}">
+            {{ key.split(',')[1] }}
+            <i class="fas fa-external-link-alt"></i>
+          </a></span>
+        <p> {{ key.split(',')[2] }}</p>
+        <table class="table table-bordered shadow-z-1">
+
+        <thead>
+        <tr>
+          <th>Reference Bases</th>
+          <th>AlternateBases Bases</th>
+          <th>Variant Count</th>
+          <th>callCount/sampleCount</th>
+          <th>Frequency</th>
+          <th>Access</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="dataset in value">
+
+          <!-- <li><strong>Description:</strong> {{ dataset.note }}</li> -->
+          <td>{{ dataset.referenceBases }}</td>
+          <td>{{ dataset.alternateBases }}</td>
+          <td>{{ dataset.variantCount }}</td>
+          <td>{{ dataset.callCount }} / {{ dataset.sampleCount }}</td>
+          <td>{{ dataset.frequency }}</td>
+          <td><span ng-repeat="infoItem in dataset.info">{{ infoItem.accessType }}</span></td>
+
+      </tr>
+      </tbody>
+      </table>
       </md-card-content>
+      </md-card>
       <hr/>
       <md-card-actions layout="column" layout-align="start"  class="cardItem">
       </md-card-actions>

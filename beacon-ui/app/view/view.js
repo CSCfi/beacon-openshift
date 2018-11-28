@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCookies', 'ui.bootstrap'])
+angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCookies', 'ui.bootstrap', 'angular.filter'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view', {
@@ -17,6 +17,227 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   that.searchClick = false;
 
   that.triggerCredentials = false;
+
+  $scope.exampleResponse = [{
+    "beaconId": "localhost:5050",
+    "apiVersion": "1.0.0",
+    "exists": true,
+    "alleleRequest": {
+      "referenceName": "MT",
+      "start": 64,
+      "startMin": 0,
+      "startMax": 0,
+      "end": 0,
+      "endMin": 0,
+      "endMax": 0,
+      "referenceBases": "CT",
+      "assemblyId": "GRCh38",
+      "datasetIds": [],
+      "includeDatasetResponses": "ALL",
+      "alternateBases": "NN"
+    },
+    "datasetAlleleResponses": [{
+      "datasetId": "urn:hg:1000genome",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "AT",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "PUBLIC"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TC",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "PUBLIC"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 118,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TT",
+      "frequency": 0.046603475,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "PUBLIC"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-registered",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "AT",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "REGISTERED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-registered",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TC",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "REGISTERED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-registered",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 118,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TT",
+      "frequency": 0.046603475,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "REGISTERED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-controlled",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "AT",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "CONTROLLED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-controlled",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TC",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "CONTROLLED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-controlled",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 118,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TT",
+      "frequency": 0.046603475,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "CONTROLLED"
+      }]
+    }]
+  }, {
+    "beaconId": "localhost:5050-whatever",
+    "apiVersion": "1.0.0",
+    "exists": true,
+    "alleleRequest": {
+      "referenceName": "MT",
+      "start": 64,
+      "startMin": 0,
+      "startMax": 0,
+      "end": 0,
+      "endMin": 0,
+      "endMax": 0,
+      "referenceBases": "CT",
+      "assemblyId": "GRCh38",
+      "datasetIds": [],
+      "includeDatasetResponses": "ALL",
+      "alternateBases": "NN"
+    },
+    "datasetAlleleResponses": [{
+      "datasetId": "urn:hg:1000genome-controlled",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "AT",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "CONTROLLED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-controlled",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 1,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TC",
+      "frequency": 0.000394945,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "CONTROLLED"
+      }]
+    }, {
+      "datasetId": "urn:hg:1000genome-controlled",
+      "referenceName": "MT",
+      "externalUrl": "ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/",
+      "note": "Data from 1000 genome project",
+      "sampleCount": 118,
+      "callCount": 2532,
+      "exists": true,
+      "referenceBases": "CT",
+      "alternateBases": "TT",
+      "frequency": 0.046603475,
+      "variantCount": 3,
+      "info": [{
+        "accessType": "CONTROLLED"
+      }]
+    }]
+  }]
+
 
   $scope.search = {type: 'disease', query: ''};
   $scope.assembly = {selected: 'GRCh38'};
@@ -151,7 +372,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                    $scope.assembly.selected +
                    '&referenceName=' + params[1] + '&start=' + params[2] +
-                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] + 
+                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
                    '&includeDatasetResponses=HIT';
     } else {
       console.log('search type unselected');
