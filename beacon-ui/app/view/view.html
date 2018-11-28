@@ -221,7 +221,7 @@
   <!-- <div ng-if="ctrl.selectedItem && ctrl.searchClick && checkLogin() && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row"> -->
   <!-- ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" -->
   <div class="row result-row">
-    <md-card class="resultCard" ng-repeat="datum in exampleResponse | filter:{exists:true}">
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data.results | filter:{exists:true}">
       <md-card-header class="cardItem">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
@@ -233,13 +233,17 @@
       </md-card-header>
       <md-card ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'"  class="cardItem">
       <md-card-content>
-        <h5><strong>Dataset ID:</strong> {{ key.split(',')[0] }} <span class="accesstype">{{ value[0].info[0].accessType }}</span></h5>
-        <span ><strong>Dataset Url:</strong>
+        <h5><strong style="font-size:0.7em">Dataset</strong> {{ key.split(',')[0] }} <strong style="font-size:0.7em">is</strong>
+          <span ng-class="{'color-red': value[0].info[0].accessType === 'CONTROLLED',
+        'color-orange': value[0].info[0].accessType === 'REGISTERED',
+        'color-green': value[0].info[0].accessType === 'PUBLIC'}"
+          class="accesstype" >{{ value[0].info[0].accessType }}</span></h5>
+        <div>
           <a target="_blank" href="{{ key.split(',')[1] }}">
-            {{ key.split(',')[1] }}
+            Dataset URL
             <i class="fas fa-external-link-alt"></i>
-          </a></span>
-        <p> {{ key.split(',')[2] }}</p>
+          </a></div>
+        <p>{{ key.split(',')[2] }}</p>
         <table class="table table-bordered shadow-z-1">
 
         <thead>
