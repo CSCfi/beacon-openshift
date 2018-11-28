@@ -233,7 +233,7 @@
       </md-card-header>
       <md-card ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'"  class="cardItem">
       <md-card-content>
-        <h5><strong>Dataset ID:</strong> {{ key.split(',')[0] }}</h5>
+        <h5><strong>Dataset ID:</strong> {{ key.split(',')[0] }} <span class="accesstype">{{ value[0].info[0].accessType }}</span></h5>
         <span ><strong>Dataset Url:</strong>
           <a target="_blank" href="{{ key.split(',')[1] }}">
             {{ key.split(',')[1] }}
@@ -244,24 +244,21 @@
 
         <thead>
         <tr>
+          <th>Variant Type</th>
           <th>Reference Bases</th>
-          <th>AlternateBases Bases</th>
-          <th>Variant Count</th>
-          <th>callCount/sampleCount</th>
+          <th>Alternate Bases</th>
+          <th>Allele Count</th>
           <th>Frequency</th>
-          <th>Access</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="dataset in value">
 
-          <!-- <li><strong>Description:</strong> {{ dataset.note }}</li> -->
+          <td>{{ dataset.variantType }}</td>
           <td>{{ dataset.referenceBases }}</td>
           <td>{{ dataset.alternateBases }}</td>
-          <td>{{ dataset.variantCount }}</td>
-          <td>{{ dataset.callCount }} / {{ dataset.sampleCount }}</td>
+          <td>{{ dataset.sampleCount }}</td>
           <td>{{ dataset.frequency }}</td>
-          <td><span ng-repeat="infoItem in dataset.info">{{ infoItem.accessType }}</span></td>
 
       </tr>
       </tbody>

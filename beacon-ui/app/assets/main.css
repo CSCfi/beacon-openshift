@@ -454,3 +454,9 @@ md-autocomplete#custom-template {
 #fixedInfo h4 { font-size: 1.1em;}
 #fixedInfo p { font-size: 0.9em;}
 #fixedInfo button {margin-top: 5px;}
+
+.accesstype {
+	font-size: 0.8em;
+	color: #F57C20;
+	/* font-weight: bold; */
+}
