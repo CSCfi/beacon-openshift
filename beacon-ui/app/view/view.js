@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCookies', 'ui.bootstrap'])
+angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCookies', 'ui.bootstrap', 'angular.filter'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view', {
@@ -151,7 +151,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                    $scope.assembly.selected +
                    '&referenceName=' + params[1] + '&start=' + params[2] +
-                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] + 
+                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
                    '&includeDatasetResponses=HIT';
     } else {
       console.log('search type unselected');
