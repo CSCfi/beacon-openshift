@@ -185,7 +185,7 @@
   <!-- <div ng-if="ctrl.selectedItem && ctrl.searchClick && checkLogin() && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row"> -->
 
   <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
-    <div class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
       <md-card-header class="cardItem">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
@@ -196,7 +196,7 @@
         </md-card-header-text>
       </md-card-header>
       <hr />
-      <md-card ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'" class="cardItem">
+      <div ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'" class="cardItem">
         <md-card-content>
           <h5><strong style="font-size:0.7em">Dataset</strong> {{ key.split(',')[0] }} <strong style="font-size:0.7em">is</strong>
             <span ng-class="{'color-red': value[0].info[0].accessType === 'CONTROLLED',
@@ -232,11 +232,11 @@
             </tbody>
           </table>
         </md-card-content>
-      </md-card>
+      </div>
       <hr />
       <md-card-actions layout="column" layout-align="start" class="cardItem">
       </md-card-actions>
-    </div>
+    </md-card>
   </div>
   <div ng-if="ctrl.message == 'loading'" layout="row" layout-sm="column" layout-align="space-around">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
