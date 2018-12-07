@@ -52,6 +52,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   };
 
   that.regexp = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+  that.regexp2 = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> (DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$/i;
+  that.varTypes = ["DEL:ME", "INS:ME", "DUP:TANDEM", "DUP", "DEL", "INS", "INV", "CNV", "SNP", "MNP"]
 
   $scope.checkLogin = function() {
     if($cookies.get('access_token')) {
@@ -134,7 +136,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     that.message = 'loading';
     that.searchClick = true;
     $scope.itemsPerPage = 10;
-    if (that.regexp.test(that.searchText)) {
+    if (that.regexp2.test(that.searchText)) {
       that.selectedItem = {type: 'variant', name: that.searchText}
 
     }
@@ -147,12 +149,25 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     // } else
     if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
-      var params = that.searchText.match(that.regexp)
-      $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
-                   $scope.assembly.selected +
-                   '&referenceName=' + params[1] + '&start=' + params[2] +
-                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
-                   '&includeDatasetResponses=HIT';
+      var params = that.searchText.match(that.regexp2)
+      // Check if we are dealing with bases or variant types
+      if (that.varTypes.indexOf(params[4]) >= 0) {
+        // Variant type
+        $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
+                    $scope.assembly.selected +
+                    '&referenceName=' + params[1] + '&start=' + params[2] +
+                    '&referenceBases=' + params[3] + '&variantType=' + params[4] +
+                    '&includeDatasetResponses=HIT';
+        console.log($scope.url);
+      } else {
+        // Alternate base
+        $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
+                    $scope.assembly.selected +
+                    '&referenceName=' + params[1] + '&start=' + params[2] +
+                    '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
+                    '&includeDatasetResponses=HIT';
+        console.log($scope.url);
+      }
     } else {
       console.log('search type unselected');
     }

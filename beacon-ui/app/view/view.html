@@ -32,7 +32,7 @@
                 </md-select>
               </md-input-container>
               <md-autocomplete flex md-selected-item="ctrl.selectedItem" md-input-name="autocompleteField" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-selected-item="ctrl.selectedItem" md-item-text="item.name"
-                md-min-length="0" class="searchBox" md-input-minlength="2" md-input-id="autoCompleteId" md-delay="300" md-menu-class="autocomplete-custom-template" md-menu-container-class="custom-container" md-floating-label="Chromosome : Position ReferenceBase > AlternateBase">
+                md-min-length="0" class="searchBox" md-input-minlength="2" md-input-id="autoCompleteId" md-delay="300" md-menu-class="autocomplete-custom-template" md-menu-container-class="custom-container" md-floating-label="Chromosome : Position ReferenceBase > AlternateBase|VariantType">
 
                 <md-item-template>
                   <div class="item-type">
@@ -78,7 +78,7 @@
     <!-- Please select a disease or gene from the autocomplete suggestions, or search for a variant directly (see examples search above).
     <hr /> -->
     For variant search use the following search structure (including spaces):
-    <em>{Chromosome} : {Position} {ReferenceBases} > {AlternateBases}</em>
+    <em>{Chromosome} : {Position} {ReferenceBases} > {AlternateBases|VariantType}</em>
   </div>
   <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('disease') && ctrl.message.status == 200">
     <div class="row result-row">
