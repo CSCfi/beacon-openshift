@@ -28,7 +28,10 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 		$scope.baseUrl = data.baseUrl;
     $scope.aggregatorUrl = data.aggregatorUrl;
     $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
-	});
+  });
+  
+  // Determines scope of query true=HIT, false=ALL
+  $scope.hitsOnly = true;
 
   // $scope.object = {alertType : true}
     // $scope.alertType = true;
@@ -51,7 +54,11 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       $scope.alertType = false;
   };
 
-  that.regexp = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+  // Old regexp for bases only
+  // that.regexp = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+  // New regex that adds variant types
+  that.regexp2 = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> (DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$/i;
+  that.varTypes = ["DEL:ME", "INS:ME", "DUP:TANDEM", "DUP", "DEL", "INS", "INV", "CNV", "SNP", "MNP"]
 
   $scope.checkLogin = function() {
     if($cookies.get('access_token')) {
@@ -134,7 +141,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     that.message = 'loading';
     that.searchClick = true;
     $scope.itemsPerPage = 10;
-    if (that.regexp.test(that.searchText)) {
+    if (that.regexp2.test(that.searchText)) {
       that.selectedItem = {type: 'variant', name: that.searchText}
 
     }
@@ -147,12 +154,26 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     // } else
     if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
-      var params = that.searchText.match(that.regexp)
+      var params = that.searchText.match(that.regexp2)
+      // Determine scope of query
+      var inclDataResp = 'HIT';
+      var searchType = '';
+      if ($scope.hitsOnly == false) {
+        inclDataResp = 'ALL';
+      }
+      // Check if we are dealing with bases or variant types
+      if (that.varTypes.indexOf(params[4]) >= 0) {
+        // Variant type
+        searchType = '&variantType=' + params[4];
+      } else {
+        // Alternate base
+        searchType = '&alternateBases=' + params[4];
+      }
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
-                   $scope.assembly.selected +
-                   '&referenceName=' + params[1] + '&start=' + params[2] +
-                   '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
-                   '&includeDatasetResponses=HIT';
+                    $scope.assembly.selected +
+                    '&referenceName=' + params[1] + '&start=' + params[2] +
+                    '&referenceBases=' + params[3] + searchType +
+                    '&includeDatasetResponses=' + inclDataResp;
     } else {
       console.log('search type unselected');
     }
@@ -178,7 +199,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     // } else
     if (searchtype == 'variant') {
       // Maybe add examples for other chromosomes later when we have more datasets
-      var variants = ['MT : 10 T > C', 'MT : 7600 G > A', 'MT : 195 TTACTAAAGT > CCACTAAAGT', 'MT : 14037 A > G']
+      var variants = ['MT : 10 T > C', 'MT : 7600 G > A', 'MT : 195 TTACTAAAGT > CCACTAAAGT', 'MT : 14037 A > G',
+                      '1 : 104431390 C > INS', '19 : 36585458 A > INS', '19 : 36909437 C > DUP', '1 : 2847963 G > DUP',
+                      '1 : 1393861 T > CNV', '1 : 85910910 C > CNV', '1 : 218144328 A > INV']
       // Select example variant from list at random
       that.searchText = variants[Math.floor(Math.random()*variants.length)];
       document.querySelector('#autoCompleteId').focus();

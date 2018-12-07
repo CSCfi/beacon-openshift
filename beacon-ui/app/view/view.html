@@ -32,8 +32,8 @@
                 </md-select>
               </md-input-container>
               <md-autocomplete flex md-selected-item="ctrl.selectedItem" md-input-name="autocompleteField" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-selected-item="ctrl.selectedItem" md-item-text="item.name"
-                md-min-length="0" class="searchBox" md-input-minlength="2" md-input-id="autoCompleteId" md-delay="300" md-menu-class="autocomplete-custom-template" md-menu-container-class="custom-container" md-floating-label="Chromosome : Position ReferenceBase > AlternateBase">
-
+                md-min-length="0" class="searchBox" md-input-minlength="2" md-input-id="autoCompleteId" md-delay="300" md-menu-class="autocomplete-custom-template" md-menu-container-class="custom-container" md-floating-label="Chromosome : Position ReferenceBase > AlternateBase|VariantType">
+                
                 <md-item-template>
                   <div class="item-type">
                     <span> {{item.type}} </span>
@@ -70,7 +70,12 @@
         <a href="" ng-click="searchExample('gene')">Gene</a> /
         <a href="" ng-click="searchExample('variant')">Variant</a>
       </div> -->
-      <div id="searchExample"><a href="" ng-click="searchExample('variant')">Show example search</a></div>
+      <div id="searchExample">
+          <md-checkbox class="md-primary filter-hits" ng-model="hitsOnly">
+              Show hits only
+          </md-checkbox>
+          <a href="" ng-click="searchExample('variant')">Show example search</a>
+      </div>
     </div>
     <hr />
   </div>
@@ -78,7 +83,7 @@
     <!-- Please select a disease or gene from the autocomplete suggestions, or search for a variant directly (see examples search above).
     <hr /> -->
     For variant search use the following search structure (including spaces):
-    <em>{Chromosome} : {Position} {ReferenceBases} > {AlternateBases}</em>
+    <em>{Chromosome} : {Position} {ReferenceBases} > {AlternateBases|VariantType}</em>
   </div>
   <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('disease') && ctrl.message.status == 200">
     <div class="row result-row">
@@ -224,7 +229,7 @@
                 <td>{{ dataset.variantType }}</td>
                 <td>{{ dataset.referenceBases }}</td>
                 <td>{{ dataset.alternateBases }}</td>
-                <td>{{ dataset.sampleCount }}</td>
+                <td>{{ dataset.variantCount }}</td>
                 <td>{{ dataset.frequency }}</td>
 
               </tr>
