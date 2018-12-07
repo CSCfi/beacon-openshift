@@ -32,7 +32,6 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   
   // Determines scope of query true=HIT, false=ALL
   $scope.hitsOnly = true;
-  console.log($scope.hitsOnly);
 
   // $scope.object = {alertType : true}
     // $scope.alertType = true;
@@ -55,7 +54,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       $scope.alertType = false;
   };
 
-  that.regexp = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+  // Old regexp for bases only
+  // that.regexp = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> ([ATCGN]+)$/i;
+  // New regex that adds variant types
   that.regexp2 = /^(X|Y|MT|[1-9]|1[0-9]|2[0-2]) \: (\d+) ([ATCGN]+) \> (DEL:ME|INS:ME|DUP:TANDEM|DUP|DEL|INS|INV|CNV|SNP|MNP|[ATCGN]+)$/i;
   that.varTypes = ["DEL:ME", "INS:ME", "DUP:TANDEM", "DUP", "DEL", "INS", "INV", "CNV", "SNP", "MNP"]
 
@@ -156,27 +157,23 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       var params = that.searchText.match(that.regexp2)
       // Determine scope of query
       var inclDataResp = 'HIT';
+      var searchType = '';
       if ($scope.hitsOnly == false) {
         inclDataResp = 'ALL';
       }
       // Check if we are dealing with bases or variant types
       if (that.varTypes.indexOf(params[4]) >= 0) {
         // Variant type
-        $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
-                    $scope.assembly.selected +
-                    '&referenceName=' + params[1] + '&start=' + params[2] +
-                    '&referenceBases=' + params[3] + '&variantType=' + params[4] +
-                    '&includeDatasetResponses=' + inclDataResp;
-        console.log($scope.url);
+        searchType = '&variantType=' + params[4];
       } else {
         // Alternate base
-        $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
+        searchType = '&alternateBases=' + params[4];
+      }
+      $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                     $scope.assembly.selected +
                     '&referenceName=' + params[1] + '&start=' + params[2] +
-                    '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
+                    '&referenceBases=' + params[3] + searchType +
                     '&includeDatasetResponses=' + inclDataResp;
-        console.log($scope.url);
-      }
     } else {
       console.log('search type unselected');
     }
