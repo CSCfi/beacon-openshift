@@ -502,3 +502,7 @@ md-autocomplete#custom-template {
 	/* color: #F57C20; */
 	/* font-weight: bold; */
 }
+
+.filter-hits {
+	float: left;
+}

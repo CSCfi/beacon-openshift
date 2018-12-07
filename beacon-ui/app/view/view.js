@@ -28,7 +28,11 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 		$scope.baseUrl = data.baseUrl;
     $scope.aggregatorUrl = data.aggregatorUrl;
     $scope.autocompleteUrl = $scope.baseUrl + '/autocomplete?';
-	});
+  });
+  
+  // Determines scope of query true=HIT, false=ALL
+  $scope.hitsOnly = true;
+  console.log($scope.hitsOnly);
 
   // $scope.object = {alertType : true}
     // $scope.alertType = true;
@@ -150,6 +154,11 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     if (that.selectedItem && that.selectedItem.type == 'variant') {
       that.triggerCredentials = true;
       var params = that.searchText.match(that.regexp2)
+      // Determine scope of query
+      var inclDataResp = 'HIT';
+      if ($scope.hitsOnly == false) {
+        inclDataResp = 'ALL';
+      }
       // Check if we are dealing with bases or variant types
       if (that.varTypes.indexOf(params[4]) >= 0) {
         // Variant type
@@ -157,7 +166,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
                     $scope.assembly.selected +
                     '&referenceName=' + params[1] + '&start=' + params[2] +
                     '&referenceBases=' + params[3] + '&variantType=' + params[4] +
-                    '&includeDatasetResponses=HIT';
+                    '&includeDatasetResponses=' + inclDataResp;
         console.log($scope.url);
       } else {
         // Alternate base
@@ -165,7 +174,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
                     $scope.assembly.selected +
                     '&referenceName=' + params[1] + '&start=' + params[2] +
                     '&referenceBases=' + params[3] + '&alternateBases=' + params[4] +
-                    '&includeDatasetResponses=HIT';
+                    '&includeDatasetResponses=' + inclDataResp;
         console.log($scope.url);
       }
     } else {

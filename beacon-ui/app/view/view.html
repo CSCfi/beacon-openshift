@@ -33,7 +33,7 @@
               </md-input-container>
               <md-autocomplete flex md-selected-item="ctrl.selectedItem" md-input-name="autocompleteField" md-search-text="ctrl.searchText" md-items="item in ctrl.querySearch(ctrl.searchText)" md-selected-item="ctrl.selectedItem" md-item-text="item.name"
                 md-min-length="0" class="searchBox" md-input-minlength="2" md-input-id="autoCompleteId" md-delay="300" md-menu-class="autocomplete-custom-template" md-menu-container-class="custom-container" md-floating-label="Chromosome : Position ReferenceBase > AlternateBase|VariantType">
-
+                
                 <md-item-template>
                   <div class="item-type">
                     <span> {{item.type}} </span>
@@ -70,7 +70,12 @@
         <a href="" ng-click="searchExample('gene')">Gene</a> /
         <a href="" ng-click="searchExample('variant')">Variant</a>
       </div> -->
-      <div id="searchExample"><a href="" ng-click="searchExample('variant')">Show example search</a></div>
+      <div id="searchExample">
+          <md-checkbox class="md-primary filter-hits" ng-model="hitsOnly">
+              Show hits only
+          </md-checkbox>
+          <a href="" ng-click="searchExample('variant')">Show example search</a>
+      </div>
     </div>
     <hr />
   </div>
