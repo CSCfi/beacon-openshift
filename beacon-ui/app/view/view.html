@@ -198,9 +198,9 @@
       <div ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'" class="cardItem">
         <md-card-content>
           <h5>{{ key.split(',')[0] }}
-            <span ng-class="{'color-red': value[0].info[0].accessType === 'CONTROLLED',
-        'color-orange': value[0].info[0].accessType === 'REGISTERED',
-        'color-green': value[0].info[0].accessType === 'PUBLIC'}" class="accesstype">{{ value[0].info[0].accessType }}</span></h5>
+            <span ng-class="{'color-red': value[0].info.accessType === 'CONTROLLED',
+        'color-orange': value[0].info.accessType === 'REGISTERED',
+        'color-green': value[0].info.accessType === 'PUBLIC'}" class="accesstype">{{ value[0].info.accessType }}</span></h5>
           <div>
             <a target="_blank" href="{{ key.split(',')[1] }}">
               Dataset URL
@@ -215,7 +215,7 @@
                 <th>Reference Bases</th>
                 <th>Alternate Bases</th>
                 <th>Allele Count</th>
-                <th>Frequency</th>
+                <th>Frequency (approx.)</th>
               </tr>
             </thead>
             <tbody>
