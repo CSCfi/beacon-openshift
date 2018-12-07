@@ -199,7 +199,9 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
     // } else
     if (searchtype == 'variant') {
       // Maybe add examples for other chromosomes later when we have more datasets
-      var variants = ['MT : 10 T > C', 'MT : 7600 G > A', 'MT : 195 TTACTAAAGT > CCACTAAAGT', 'MT : 14037 A > G']
+      var variants = ['MT : 10 T > C', 'MT : 7600 G > A', 'MT : 195 TTACTAAAGT > CCACTAAAGT', 'MT : 14037 A > G',
+                      '1 : 104431390 C > INS', '19 : 36585458 A > INS', '19 : 36909437 C > DUP', '1 : 2847963 G > DUP',
+                      '1 : 1393861 T > CNV', '1 : 85910910 C > CNV', '1 : 218144328 A > INV']
       // Select example variant from list at random
       that.searchText = variants[Math.floor(Math.random()*variants.length)];
       document.querySelector('#autoCompleteId').focus();
