@@ -4,6 +4,7 @@
 angular.module('beaconApp', [
   'ngRoute',
   'beaconApp.view',
+  'beaconApp.about',
   'beaconApp.version'
 ]).
 config(['$locationProvider', '$routeProvider', function($locationProvider, $routeProvider) {

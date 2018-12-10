@@ -506,3 +506,22 @@ md-autocomplete#custom-template {
 .filter-hits {
 	float: left;
 }
+
+.about-button {
+	color: #FFF;
+	background-color: rgb(33, 150, 243);
+	padding: 5px;
+	margin: 3px;
+	border-radius: 5px;
+	text-decoration: none;
+}
+
+.about-row {
+	width: 85%;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content:center;
+	align-items:baseline;
+}
