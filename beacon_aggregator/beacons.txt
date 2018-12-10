@@ -1,1 +1,2 @@
 https://beaconpy-elixirbeacon.rahtiapp.fi/query
+https://beacon.progenetix.org/beaconplus-server/beaconresponse.cgi
