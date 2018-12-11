@@ -77,7 +77,7 @@
         <a href="" ng-click="searchExample('variant')">Variant</a>
       </div> -->
       <div id="searchExample">
-          <md-checkbox class="md-primary filter-hits" ng-model="hitsOnly">
+          <md-checkbox class="md-primary filter-hits" ng-model="hitsOnly" ng-true-value="{exists:true}" ng-false-value="">
               Show hits only
           </md-checkbox>
           <a href="" ng-click="searchExample('variant')">Show example search</a>
@@ -196,28 +196,31 @@
   <!-- <div ng-if="ctrl.selectedItem && ctrl.searchClick && checkLogin() && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row"> -->
 
   <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
-    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:{exists:true}">
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:hitsOnly">
       <md-card-header class="cardItem" id="topCard">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
+          <span ng-if="datum.datasetAlleleResponses.length" class="found-badge color-green">Found</span>
+          <span ng-if="!datum.datasetAlleleResponses.length" class="found-badge color-red">Not Found</span>
           <!-- <span class="md-subhead">Number of registered datasets: {{datum.datasetAlleleResponses.length}}</span>
           <span ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true} as filtered">
           </span>
           <span class="md-subhead">Number of available datasets: {{filtered.length}}</span> -->
         </md-card-header-text>
       </md-card-header>
+      <div ng-if="!datum.datasetAlleleResponses.length"><md-card-content>No datasets were found with matching variants.</md-card-content></div>
       <div ng-repeat="(key, value) in datum.datasetAlleleResponses | filter:{exists:true} | groupBy: '[datasetId,externalUrl, note]'" class="cardItem">
         <md-card-content>
-          <h5>{{ key.split(',')[0] }}
+          <h5>{{ value[0].datasetId }}
             <span ng-class="{'color-red': value[0].info.accessType === 'CONTROLLED',
         'color-orange': value[0].info.accessType === 'REGISTERED',
         'color-green': value[0].info.accessType === 'PUBLIC'}" class="accesstype">{{ value[0].info.accessType }}</span></h5>
           <div>
-            <a target="_blank" href="{{ key.split(',')[1] }}">
+            <a target="_blank" href="{{ value[0].externalUrl }}">
               Dataset URL
               <i class="fas fa-external-link-alt"></i>
             </a></div>
-          <p id="datasetNote">{{ key.split(',')[2] }}</p>
+          <p id="datasetNote">{{ value[0].note }}</p>
           <table class="table table-bordered shadow-z-1">
 
             <thead>
@@ -232,9 +235,9 @@
             <tbody>
               <tr ng-repeat="dataset in value">
 
-                <td>{{ dataset.variantType }}</td>
-                <td>{{ dataset.referenceBases }}</td>
-                <td>{{ dataset.alternateBases }}</td>
+                <td>{{ dataset.variantType }}<span ng-if="!dataset.variantType">{{ datum.alleleRequest.variantType }}</span></td>
+                <td>{{ dataset.referenceBases }}<span ng-if="!dataset.referenceBases">{{ datum.alleleRequest.referenceBases }}</span></td>
+                <td>{{ dataset.alternateBases }}<span ng-if="!dataset.alternateBases">{{ datum.alleleRequest.alternateBases }}</span></td>
                 <td>{{ dataset.variantCount }}</td>
                 <td>{{ dataset.frequency }}</td>
 
