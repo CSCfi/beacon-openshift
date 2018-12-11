@@ -200,6 +200,8 @@
       <md-card-header class="cardItem" id="topCard">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
+          <span ng-if="datum.datasetAlleleResponses.length" class="found-badge color-green">Found</span>
+          <span ng-if="!datum.datasetAlleleResponses.length" class="found-badge color-red">Not Found</span>
           <!-- <span class="md-subhead">Number of registered datasets: {{datum.datasetAlleleResponses.length}}</span>
           <span ng-repeat="dataset in datum.datasetAlleleResponses | filter:{exists:true} as filtered">
           </span>

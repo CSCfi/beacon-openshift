@@ -217,7 +217,7 @@ md-card-content ul li {
 
 .color-red {
   color: red;
-}}
+}
 
 .icon_animation {
 	-webkit-animation: spin 2s linear infinite;
@@ -316,6 +316,7 @@ md-card #topCard {
 
 .result-row .resultCard md-card-header-text {
 	overflow: hidden;
+	position: relative;
 }
 
 .result-box {
@@ -524,4 +525,15 @@ md-autocomplete#custom-template {
 	flex-wrap: wrap;
 	justify-content:center;
 	align-items:baseline;
+}
+
+.found-badge {
+	background-color: #FFF;
+	border-radius: 4px;
+	padding: 0px 5px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-weight: bold;
+	font-size: 0.8em;
 }
