@@ -24,6 +24,24 @@
   <md-card class="resultCard">
     <md-card-header class="cardItem" id="topCard">
       <md-card-header-text>
+        <span class="md-title">Connected Beacons</span>
+      </md-card-header-text>
+    </md-card-header>
+    <div class="cardItem">
+      <md-card-content>
+        Beacons that are connected to the aggregator behind this UI.
+        <ul>
+          <li><a href="https://beaconpy-elixirbeacon.rahtiapp.fi/">ELIXIR Finland</a></li>
+          <li><a href="https://beacon.progenetix.org/beaconplus-server/beaconresponse.cgi">Progenetix Beacon+</a></li>
+        </ul>
+      </md-card-content>
+    </div>
+    <md-card-actions layout="column" layout-align="start" class="cardItem">
+    </md-card-actions>
+  </md-card>
+  <md-card class="resultCard">
+    <md-card-header class="cardItem" id="topCard">
+      <md-card-header-text>
         <span class="md-title">About Beacon</span>
       </md-card-header-text>
     </md-card-header>
@@ -88,7 +106,7 @@
         The Beacon UI searchbar is a simple form with two options: selection of assembly and definition of variant. The assembly can be selected from the dropdown menu on the left side, currently supporting assemblies GRCh37 and GRCh38. The searchbar then takes the desired variant information as a search term which will be queried for in the dataset database.
       </md-card-content>
       <md-card-content>
-        The search structure follows a strict convention of {CHROMOSOME} : {CHROMOSOMAL POSITION} {REFERENCE BASES} > {ALTERNATE BASES | VARIANT TYPE}.
+        The search structure follows a strict convention of {CHROMOSOME} : {CHROMOSOMAL POSITION} {REFERENCE BASES} > {ALTERNATE BASES | VARIANT TYPE}. Note that the UI uses 1-based (base) coordinate system, while the API uses 0-based (interbase) coordinate system.
       </md-card-content>
       <md-card-content>
         Example query: <i>I want to find a genomic dataset which has samples of insertion type variants in chromosome 1 at position 104431390 where the reference base is C.</i> This would transform into the following statement in the searchbar: 1 : 104431390 C > INS.
@@ -108,45 +126,13 @@
         The Beacon API can be utilised by advanced users, as it has more options available compared to the Beacon UI searchbar, e.g. region queries instead of exact positions. For full Beacon API usage, please consult the <a href="https://app.swaggerhub.com/apis-docs/ELIXIR-Finland/ga-4_gh_beacon_api_specification/1.0.0-rc1">Beacon API specification</a>.
       </md-card-content>
       <md-card-content>
-        Example manual usage of the Beacon API, using the ELIXIR Finland Beacon by CSC (values taken from the first two examples in the previous Beacon UI example paragraph).
+        Example manual usage of the Beacon API, using the ELIXIR Finland Beacon by CSC (values taken from the first two examples in the previous Beacon UI example paragraph). Note that the API uses 0-based (interbase) coordinate system, while the UI uses 1-based (base) coordinate system.
       </md-card-content>
       <md-card-content>
-        <a href="https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=1&start=104431390&referenceBases=C&variantType=INS">https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=1&start=104431390&referenceBases=C&variantType=INS</a>
+        <a href="https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=1&start=104431389&referenceBases=C&variantType=INS">https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=1&start=104431390&referenceBases=C&variantType=INS</a>
       </md-card-content>
       <md-card-content>
-        <a href="https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=MT&start=7600&referenceBases=G&alternateBases=A">https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=MT&start=7600&referenceBases=G&alternateBases=A</a>
-      </md-card-content>
-    </div>
-    <md-card-actions layout="column" layout-align="start" class="cardItem">
-    </md-card-actions>
-  </md-card>
-  <md-card class="resultCard">
-    <md-card-header class="cardItem" id="topCard">
-      <md-card-header-text>
-        <span class="md-title">Acknowledgements</span>
-      </md-card-header-text>
-    </md-card-header>
-    <div class="cardItem">
-      <md-card-content>
-        The example Beacon API <i>fi.rahtiapp.beaconpy-elixirbeacon</i> is populated using data from the 1000 genomes project. The 1000 genomes project and its data is property of EMBL-EBI. Read more on 1000 genomes <a href="http://www.internationalgenome.org/home">here</a>. The data is publicly available <a href="ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/release/20130502/">here</a>.
-      </md-card-content>
-    </div>
-    <md-card-actions layout="column" layout-align="start" class="cardItem">
-    </md-card-actions>
-  </md-card>
-  <md-card class="resultCard">
-    <md-card-header class="cardItem" id="topCard">
-      <md-card-header-text>
-        <span class="md-title">Connected Beacons</span>
-      </md-card-header-text>
-    </md-card-header>
-    <div class="cardItem">
-      <md-card-content>
-        Beacons that are connected to the aggregator behind this UI.
-        <ul>
-          <li><a href="https://beaconpy-elixirbeacon.rahtiapp.fi/">ELIXIR Finland</a></li>
-          <li><a href="https://beacon.progenetix.org/beaconplus-server/beaconresponse.cgi">Progenetix Beacon+</a></li>
-        </ul>
+        <a href="https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=MT&start=7599&referenceBases=G&alternateBases=A">https://beaconpy-elixirbeacon.rahtiapp.fi/query?assemblyId=GRCh38&referenceName=MT&start=7600&referenceBases=G&alternateBases=A</a>
       </md-card-content>
     </div>
     <md-card-actions layout="column" layout-align="start" class="cardItem">
