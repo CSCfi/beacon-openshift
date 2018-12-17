@@ -119,7 +119,7 @@ def main():
     """Start the web server."""
     web.run_app(init(),
                 host=os.environ.get('APP_HOST', 'localhost'),
-                port=os.environ.get('APP_PORT', 5000))
+                port=os.environ.get('APP_PORT', 8080))
 
 
 if __name__ == '__main__':
