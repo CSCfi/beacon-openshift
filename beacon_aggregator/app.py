@@ -42,11 +42,10 @@ def get_beacons():
 @routes.get('/q')
 async def query_string_endpoint(request):
     """Stream the response from the query and package it nicely."""
-    # Prepare response object
-    resp = web.StreamResponse(status=200,
-                              reason='OK',
-                              headers={'Content-Type': 'application/json'})
-    await resp.prepare(request)
+    # Prepare websocket for responding
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
+
     q = request.query_string  # query parameters, pass all
     tasks = []  # requests to-be-done are appended here
     BEACONS = get_beacons()  # list of beacon urls
@@ -62,27 +61,18 @@ async def query_string_endpoint(request):
         tasks.append(task)
         LOG.info(f'Queueing request to {beacon} with {q}')
     try:
-        # Initiate the stream response by opening a list
-        await resp.write(b'[')
-
-        # Fetch responses from the queued requests, and print
-        # them into the streamed response as they complete
+        # Fetch responses from the queued requests, and send
+        # them into the web socket response as they complete
         for index, res in enumerate(tasks):
-            if index == len(tasks)-1:
-                await resp.write(json.dumps(await res).encode('utf-8'))
-                LOG.info(f'Processing requests {index+1}/{len(tasks)}')
-            else:
-                await resp.write(json.dumps(await res).encode('utf-8') + b',')
-                LOG.info(f'Processing requests {index+1}/{len(tasks)}')
+            await ws.send_str(json.dumps(await res))
+            LOG.info(f'Processing requests {index+1}/{len(tasks)}')
 
-        # Finally close the stream response list and do sanitation
-        await resp.write(b']')
-        await resp.drain()
-        await resp.write_eof()
+        # Finally close the web socket
+        await ws.close()
         LOG.info('All requests have been completed')
     except Exception as e:
         LOG.error(f'Something went bad: {e}')
-    return resp
+    return ws
 
 
 async def query(beacon, q, access_token):
@@ -129,7 +119,7 @@ def main():
     """Start the web server."""
     web.run_app(init(),
                 host=os.environ.get('APP_HOST', 'localhost'),
-                port=os.environ.get('APP_PORT', 8080))
+                port=os.environ.get('APP_PORT', 5000))
 
 
 if __name__ == '__main__':
