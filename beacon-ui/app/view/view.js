@@ -172,8 +172,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       console.log('search type unselected');
     }
 
-    // prepend aggregator url with websocket protocol (ws:// is bad, test how to enable wss://)
-    $scope.wsUrl = 'ws://' + $scope.url;
+    // prepend aggregator url with websocket protocol
+    $scope.wsUrl = 'wss://' + $scope.url;
     var websocket = new WebSocket($scope.wsUrl);
 
     websocket.onopen = function(event) {
