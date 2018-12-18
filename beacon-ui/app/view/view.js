@@ -135,7 +135,8 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
 
   // Simple GET request example:
   $scope.submit = function() {
-    that.message = 'loading';
+    that.loading = true; // moved loading spinner from message to it's own variable
+    that.message = []; // put websocket responses here
     that.searchClick = true;
     $scope.itemsPerPage = 10;
     if (that.regexp2.test(that.searchText)) {
@@ -171,14 +172,45 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       console.log('search type unselected');
     }
 
-    $http({
-      method: 'GET',
-      url: $scope.url,
-      withCredentials: that.triggerCredentials
-    }).then(function successCallback(response) {
-        that.message = response;
-      }, function errorCallback(response) {
+    // prepend aggregator url with websocket protocol (ws:// is bad, test how to enable wss://)
+    $scope.wsUrl = 'ws://' + $scope.url;
+    var websocket = new WebSocket($scope.wsUrl);
+
+    websocket.onopen = function(event) {
+      // The connection was opened
+      console.log('websocket opened')
+    }; 
+    websocket.onclose = function(event) { 
+      // The connection was closed
+      $scope.$apply(function() {
+        that.loading = false // stop spinner
+      })
+      console.log('websocket closed')
+    }; 
+    websocket.onmessage = function(event) {
+      $scope.$apply(function() {
+        // New message arrived
+        console.log('websocket received data')
+        that.message.push(angular.fromJson(event.data))
       });
+    }; 
+    websocket.onerror = function(event) { 
+      // There was an error with your WebSocket
+      $scope.$apply(function() {
+        that.loading = false // stop spinner
+      })
+      console.log('websocket errored')
+    };
+
+    // OLD HTTP FUNCTION
+    // $http({
+    //   method: 'GET',
+    //   url: $scope.url,
+    //   withCredentials: that.triggerCredentials
+    // }).then(function successCallback(response) {
+    //     that.message = response;
+    //   }, function errorCallback(response) {
+    //   });
   }
 
   $scope.searchExample = function(searchtype) {
@@ -204,7 +236,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   }
 
   $scope.goToGene = function(gene) {
-    that.message = 'loading';
+    that.loading = true;
     that.searchClick = false;
     that.selectedItem = {'type': 'gene', 'name': gene};
     that.searchText = gene;
@@ -219,23 +251,23 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
       });
   }
 
-  $scope.findDatasets = function(chr, pos, ref, alt, assembly) {
-    that.searchClick = false;
-    that.message = 'loading';
-    that.selectedItem = {type: 'variant', name: chr + ' : ' + pos + ' ' + ref + ' > ' + alt};
+  // $scope.findDatasets = function(chr, pos, ref, alt, assembly) {
+  //   that.searchClick = false;
+  //   that.loading = false;
+  //   that.selectedItem = {type: 'variant', name: chr + ' : ' + pos + ' ' + ref + ' > ' + alt};
 
-    $http({
-      method: 'GET',
-      withCredentials: true,
-      url: $scope.url = $scope.aggregatorUrl + 'assemblyId='+ assembly +
-                        '&referenceName='+ chr + '&start=' + pos +
-                        '&referenceBases=' + ref + '&alternateBases=' + alt +
-                        '&includeDatasetResponses=HIT'
-    }).then(function successCallback(response) {
-        that.message = response;
-      }, function errorCallback(response) {
-        $scope.err = 'API is offline.'
-      });
-  }
+  //   $http({
+  //     method: 'GET',
+  //     withCredentials: true,
+  //     url: $scope.url = $scope.aggregatorUrl + 'assemblyId='+ assembly +
+  //                       '&referenceName='+ chr + '&start=' + pos +
+  //                       '&referenceBases=' + ref + '&alternateBases=' + alt +
+  //                       '&includeDatasetResponses=HIT'
+  //   }).then(function successCallback(response) {
+  //       that.message = response;
+  //     }, function errorCallback(response) {
+  //       $scope.err = 'API is offline.'
+  //     });
+  // }
 
 	}]);
