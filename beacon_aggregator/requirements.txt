@@ -1,2 +1,4 @@
 aiohttp
 aiohttp_cors
+asyncio
+uvloop
