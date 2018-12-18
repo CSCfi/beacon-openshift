@@ -128,7 +128,7 @@ def get_bona_fide_status(access_token):
     response = requests.get("https://login.elixir-czech.org/oidc/userinfo",
                             headers=headers)
     try:
-        if response.json()['bona_fide_status'] == BONA_FIDE_URL:
+        if 'bona_fide_status' in response.json():
             return True
     except KeyError as ke:
         LOG.error(ke)
