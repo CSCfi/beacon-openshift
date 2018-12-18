@@ -100,7 +100,7 @@ async def query(beacon, q, access_token, ws):
                     # Send error to websocket client
                     return await ws.send_str(json.dumps(str({"beaconUrl": beacon,
                                                              "queryParams": q,
-                                                             "responseStatus": response.status})))       
+                                                             "responseStatus": response.status})))
         except Exception as e:
             LOG.info(str(e))
 
