@@ -1,2 +1,3 @@
 https://beaconpy-elixirbeacon.rahtiapp.fi/query
 https://beacon.progenetix.org/beaconplus-server/beaconresponse.cgi
+https://swefreq-dev.nbis.se/api/beacon-elixir/query
