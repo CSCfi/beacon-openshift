@@ -195,8 +195,8 @@
   </div> -->
   <!-- <div ng-if="ctrl.selectedItem && ctrl.searchClick && checkLogin() && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row"> -->
 
-  <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName') && ctrl.message.status == 200" class="row result-row">
-    <md-card class="resultCard" ng-repeat="datum in ctrl.message.data | filter:hitsOnly">
+  <div ng-if="ctrl.selectedItem && ctrl.searchClick && url.includes('referenceName')" class="row result-row">
+    <md-card class="resultCard" ng-repeat="datum in ctrl.message | filter:hitsOnly">
       <md-card-header class="cardItem" id="topCard">
         <md-card-header-text>
           <span class="md-title">{{datum.beaconId}} <span class="beacon-api-version">{{datum.apiVersion}}</span></span>
@@ -238,8 +238,8 @@
                 <td>{{ dataset.variantType }}<span ng-if="!dataset.variantType">{{ datum.alleleRequest.variantType }}</span></td>
                 <td>{{ dataset.referenceBases }}<span ng-if="!dataset.referenceBases">{{ datum.alleleRequest.referenceBases }}</span></td>
                 <td>{{ dataset.alternateBases }}<span ng-if="!dataset.alternateBases">{{ datum.alleleRequest.alternateBases }}</span></td>
-                <td>{{ dataset.variantCount }}</td>
-                <td>{{ dataset.frequency }}</td>
+                <td>{{ dataset.variantCount > 0 ? dataset.variantCount : "n/a" }}</td>
+                <td>{{ dataset.frequency > 0 ? dataset.frequency : "n/a" }}</td>
 
               </tr>
             </tbody>
@@ -251,7 +251,7 @@
       </md-card-actions>
     </md-card>
   </div>
-  <div ng-if="ctrl.message == 'loading'" layout="row" layout-sm="column" layout-align="space-around">
+  <div ng-if="ctrl.loading" layout="row" layout-sm="column" layout-align="space-around">
     <md-progress-circular md-mode="indeterminate"></md-progress-circular>
   </div>
   <div style="text-align:center">

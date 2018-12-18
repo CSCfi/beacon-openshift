@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Master Beacon API endpoint that queries known beacons and combines the results into a single response."""
 
-import aiohttp
-import aiohttp_cors
 import json
 import logging
 import os
+
+import asyncio
+import aiohttp
+import aiohttp_cors
+import uvloop
 
 from aiohttp import web
 
@@ -17,6 +20,7 @@ LOG.setLevel(logging.INFO)
 
 # Collect API endpoints
 routes = web.RouteTableDef()
+asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 
 @routes.get('/health')
@@ -42,50 +46,34 @@ def get_beacons():
 @routes.get('/q')
 async def query_string_endpoint(request):
     """Stream the response from the query and package it nicely."""
-    # Prepare response object
-    resp = web.StreamResponse(status=200,
-                              reason='OK',
-                              headers={'Content-Type': 'application/json'})
-    await resp.prepare(request)
+    # Prepare websocket for responding
+    ws = web.WebSocketResponse()
+    await ws.prepare(request)
+
     q = request.query_string  # query parameters, pass all
     tasks = []  # requests to-be-done are appended here
     BEACONS = get_beacons()  # list of beacon urls
 
     # Iterate over beacon URLs and queue requests to them
     for beacon in BEACONS:
-        try:
-            access_token = request.cookies['access_token']
-        except KeyError as e:
-            LOG.info(e)
-            access_token = None
-        task = query(beacon, q, access_token)
+        # Get access token from cookies
+        access_token = request.cookies['access_token'] if 'access_token' in request.cookies else None
+        # Bundle queries together
+        task = asyncio.ensure_future(query(beacon, q, access_token, ws))
         tasks.append(task)
-        LOG.info(f'Queueing request to {beacon} with {q}')
-    try:
-        # Initiate the stream response by opening a list
-        await resp.write(b'[')
+        LOG.info(f'Queueing request to {beacon} with params={q}')
 
-        # Fetch responses from the queued requests, and print
-        # them into the streamed response as they complete
-        for index, res in enumerate(tasks):
-            if index == len(tasks)-1:
-                await resp.write(json.dumps(await res).encode('utf-8'))
-                LOG.info(f'Processing requests {index+1}/{len(tasks)}')
-            else:
-                await resp.write(json.dumps(await res).encode('utf-8') + b',')
-                LOG.info(f'Processing requests {index+1}/{len(tasks)}')
+    # Prepare and initiate coroutines
+    await asyncio.gather(*tasks)
 
-        # Finally close the stream response list and do sanitation
-        await resp.write(b']')
-        await resp.drain()
-        await resp.write_eof()
-        LOG.info('All requests have been completed')
-    except Exception as e:
-        LOG.error(f'Something went bad: {e}')
-    return resp
+    # Finally close the websocket connection
+    await ws.close()
+    LOG.info('All requests have been completed')
+
+    return ws
 
 
-async def query(beacon, q, access_token):
+async def query(beacon, q, access_token, ws):
     """Query the beacon endpoint."""
     headers = {'User-Agent': 'ELIXIR Beacon Aggregator 1.0'}
     if access_token:
@@ -99,10 +87,20 @@ async def query(beacon, q, access_token):
                                    params=q,
                                    ssl=os.environ.get('HTTPS_ONLY', True),
                                    headers=headers) as response:
-                LOG.info(f'Made request to {beacon} with {q}')
+                LOG.info(f'Made request to {beacon} with params={q}')
 
-                # Return the response asynchronously when it arrives
-                return await response.json()
+                # Check that response status is 200 before sending websocket message
+                # filters e.g. 504 time-outs
+                if response.status == 200:
+                    # Return the response asynchronously when it arrives
+                    result = await response.json()
+                    # Send result to websocket client
+                    return await ws.send_str(json.dumps(result))
+                else:
+                    # Send error to websocket client
+                    return await ws.send_str(json.dumps(str({"beaconUrl": beacon,
+                                                             "queryParams": q,
+                                                             "responseStatus": response.status})))
         except Exception as e:
             LOG.info(str(e))
 
@@ -111,7 +109,7 @@ def init():
     """Initialise server."""
     server = web.Application()
     # Set this to the domain of the GUI to only allow requests from that source
-    DOMAIN = os.environ.get('CORS_ALLOWED_DOMAIN', 'localhost:3000')
+    DOMAIN = os.environ.get('CORS_ALLOWED_DOMAIN', 'localhost:8000')
     cors = aiohttp_cors.setup(server, defaults={
         DOMAIN: aiohttp_cors.ResourceOptions(
             allow_credentials=True,
