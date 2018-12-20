@@ -162,10 +162,12 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
         // Alternate base
         searchType = '&alternateBases=' + params[4];
       }
-      var position = Number(params[2]) - 1;
+      var startMin = Number(params[2]) - 1;
+      var startMax = Number(params[2]);
       $scope.url = $scope.aggregatorUrl + 'assemblyId=' +
                     $scope.assembly.selected +
-                    '&referenceName=' + params[1] + '&start=' + position +
+                    '&referenceName=' + params[1] +
+                    '&startMin=' + startMin + '&startMax=' + startMax +
                     '&referenceBases=' + params[3] + searchType +
                     '&includeDatasetResponses=HIT';
     } else {
