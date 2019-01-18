@@ -19,7 +19,7 @@ angular.module('beaconApp.view', ['ngRoute', 'ngMaterial', 'ngMessages', 'ngCook
   that.triggerCredentials = false;
 
   $scope.search = {type: 'disease', query: ''};
-  $scope.assembly = {selected: 'GRCh38'};
+  $scope.assembly = {selected: 'GRCh38'};  // GRCh38 is preselected, other values are GRCh37 and hg19
   $scope.url = '';
   $scope.baseUrl = '';
   $scope.aggregatorUrl = '';
